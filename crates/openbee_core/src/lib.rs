@@ -13,4 +13,5 @@ pub mod process;
 pub mod render;
 pub mod resource;
 pub mod scene;
+pub mod security;
 pub mod util;
