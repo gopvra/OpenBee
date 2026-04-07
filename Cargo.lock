@@ -1478,24 +1478,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
-name = "openclaw"
+name = "openbee"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "openclaw_core",
- "openclaw_editor",
- "openclaw_game",
- "openclaw_mod",
- "openclaw_net",
- "openclaw_rez",
- "openclaw_scripting",
+ "openbee_core",
+ "openbee_editor",
+ "openbee_game",
+ "openbee_mod",
+ "openbee_net",
+ "openbee_rez",
+ "openbee_scripting",
  "tokio",
  "tracing",
  "tracing-subscriber",
 ]
 
 [[package]]
-name = "openclaw_core"
+name = "openbee_core"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1516,15 +1516,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_editor"
+name = "openbee_editor"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "egui",
  "glam",
- "openclaw_core",
- "openclaw_game",
- "openclaw_rez",
+ "openbee_core",
+ "openbee_game",
+ "openbee_rez",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -1532,14 +1532,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_game"
+name = "openbee_game"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "bitflags 2.11.0",
  "glam",
- "openclaw_core",
- "openclaw_rez",
+ "openbee_core",
+ "openbee_rez",
  "quick-xml",
  "rand 0.8.5",
  "rustc-hash",
@@ -1550,11 +1550,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_mod"
+name = "openbee_mod"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "openclaw_core",
+ "openbee_core",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -1562,13 +1562,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_net"
+name = "openbee_net"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "bincode",
  "byteorder",
- "openclaw_core",
+ "openbee_core",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -1577,7 +1577,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_rez"
+name = "openbee_rez"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1589,13 +1589,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "openclaw_scripting"
+name = "openbee_scripting"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "glam",
  "mlua",
- "openclaw_core",
+ "openbee_core",
  "serde",
  "serde_json",
  "thiserror 2.0.18",

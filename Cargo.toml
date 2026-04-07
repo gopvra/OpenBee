@@ -1,13 +1,13 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/openclaw_core",
-    "crates/openclaw_rez",
-    "crates/openclaw_game",
-    "crates/openclaw_scripting",
-    "crates/openclaw_editor",
-    "crates/openclaw_net",
-    "crates/openclaw_mod",
+    "crates/openbee_core",
+    "crates/openbee_rez",
+    "crates/openbee_game",
+    "crates/openbee_scripting",
+    "crates/openbee_editor",
+    "crates/openbee_net",
+    "crates/openbee_mod",
 ]
 
 [workspace.package]
@@ -39,28 +39,28 @@ anyhow = "1"
 tokio = { version = "1", features = ["full"] }
 
 # Internal crates
-openclaw_core = { path = "crates/openclaw_core" }
-openclaw_rez = { path = "crates/openclaw_rez" }
-openclaw_game = { path = "crates/openclaw_game" }
-openclaw_scripting = { path = "crates/openclaw_scripting" }
-openclaw_editor = { path = "crates/openclaw_editor" }
-openclaw_net = { path = "crates/openclaw_net" }
-openclaw_mod = { path = "crates/openclaw_mod" }
+openbee_core = { path = "crates/openbee_core" }
+openbee_rez = { path = "crates/openbee_rez" }
+openbee_game = { path = "crates/openbee_game" }
+openbee_scripting = { path = "crates/openbee_scripting" }
+openbee_editor = { path = "crates/openbee_editor" }
+openbee_net = { path = "crates/openbee_net" }
+openbee_mod = { path = "crates/openbee_mod" }
 
 [package]
-name = "openclaw"
+name = "openbee"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [dependencies]
-openclaw_core = { workspace = true }
-openclaw_rez = { workspace = true }
-openclaw_game = { workspace = true }
-openclaw_scripting = { workspace = true }
-openclaw_editor = { workspace = true }
-openclaw_net = { workspace = true }
-openclaw_mod = { workspace = true }
+openbee_core = { workspace = true }
+openbee_rez = { workspace = true }
+openbee_game = { workspace = true }
+openbee_scripting = { workspace = true }
+openbee_editor = { workspace = true }
+openbee_net = { workspace = true }
+openbee_mod = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }

@@ -1,4 +1,4 @@
-// OpenClaw - Rust reimplementation of Captain Claw (1997)
+// OpenBee - Rust reimplementation of Captain Claw (1997)
 //
 // A complete, modular game engine reimplementing the classic platformer
 // with modern enhancements: Lua scripting, level editor, multiplayer,
@@ -8,7 +8,7 @@ use anyhow::Result;
 use tracing::{info, error, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use openclaw_game::game_app::{ClawGameApp, GameConfig, Difficulty};
+use openbee_game::game_app::{BeeGameApp, GameConfig, Difficulty};
 
 fn main() -> Result<()> {
     // Initialize logging
@@ -22,7 +22,7 @@ fn main() -> Result<()> {
     tracing::subscriber::set_global_default(subscriber)
         .expect("Failed to set tracing subscriber");
 
-    info!("OpenClaw v{} starting up...", env!("CARGO_PKG_VERSION"));
+    info!("OpenBee v{} starting up...", env!("CARGO_PKG_VERSION"));
     info!("Rust reimplementation of Captain Claw (1997)");
 
     // Parse command-line arguments
@@ -97,7 +97,7 @@ fn run_game(config: GameConfig) -> Result<()> {
         config.window_width, config.window_height,
         config.fullscreen, config.vsync);
 
-    let mut app = ClawGameApp::new(config)?;
+    let mut app = BeeGameApp::new(config)?;
     app.initialize()?;
 
     info!("Game initialized successfully. Entering main loop...");
@@ -130,7 +130,7 @@ fn run_game(config: GameConfig) -> Result<()> {
 fn run_editor() -> Result<()> {
     info!("Starting level editor mode...");
 
-    let editor = openclaw_editor::EditorApp::new();
+    let editor = openbee_editor::EditorApp::new();
     info!("Level editor initialized.");
 
     // Editor would run its own event loop here
@@ -145,7 +145,7 @@ fn run_server(addr: String, port: u16) -> Result<()> {
 
     let rt = tokio::runtime::Runtime::new()?;
     rt.block_on(async {
-        let config = openclaw_net::server::ServerConfig {
+        let config = openbee_net::server::ServerConfig {
             address: addr,
             port,
             max_players: 4,
@@ -153,7 +153,7 @@ fn run_server(addr: String, port: u16) -> Result<()> {
             password: None,
         };
 
-        let mut server = openclaw_net::GameServer::start(config).await?;
+        let mut server = openbee_net::GameServer::start(config).await?;
         info!("Server started. Waiting for connections...");
 
         // Server tick loop
@@ -171,10 +171,10 @@ fn run_server(addr: String, port: u16) -> Result<()> {
 }
 
 fn print_help() {
-    println!("OpenClaw - Rust reimplementation of Captain Claw (1997)");
+    println!("OpenBee - Rust reimplementation of Captain Claw (1997)");
     println!();
     println!("USAGE:");
-    println!("    openclaw [OPTIONS] [REZ_FILE]");
+    println!("    openbee [OPTIONS] [REZ_FILE]");
     println!();
     println!("OPTIONS:");
     println!("    -h, --help           Show this help message");
@@ -188,11 +188,11 @@ fn print_help() {
     println!("    REZ_FILE             Path to CLAW.REZ game archive");
     println!();
     println!("EXAMPLES:");
-    println!("    openclaw                         Run with default settings");
-    println!("    openclaw CLAW.REZ                Run with specified REZ file");
-    println!("    openclaw --editor                Open the level editor");
-    println!("    openclaw --server 0.0.0.0 27015  Start a multiplayer server");
-    println!("    openclaw --fullscreen -d hard     Fullscreen, hard difficulty");
+    println!("    openbee                         Run with default settings");
+    println!("    openbee CLAW.REZ                Run with specified REZ file");
+    println!("    openbee --editor                Open the level editor");
+    println!("    openbee --server 0.0.0.0 27015  Start a multiplayer server");
+    println!("    openbee --fullscreen -d hard     Fullscreen, hard difficulty");
     println!();
     println!("KEYBINDINGS (default):");
     println!("    Arrow Keys / WASD    Move");
