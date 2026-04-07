@@ -1,0 +1,67 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/openclaw_core",
+    "crates/openclaw_rez",
+    "crates/openclaw_game",
+    "crates/openclaw_scripting",
+    "crates/openclaw_editor",
+    "crates/openclaw_net",
+    "crates/openclaw_mod",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/gopvra/OpenBee"
+
+[workspace.dependencies]
+# Core engine
+glam = { version = "0.29", features = ["serde"] }
+bitflags = "2"
+byteorder = "1"
+rustc-hash = "2"
+image = "0.25"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+quick-xml = { version = "0.37", features = ["serialize"] }
+
+# Logging & Error handling
+tracing = "0.1"
+tracing-subscriber = "0.3"
+thiserror = "2"
+anyhow = "1"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Internal crates
+openclaw_core = { path = "crates/openclaw_core" }
+openclaw_rez = { path = "crates/openclaw_rez" }
+openclaw_game = { path = "crates/openclaw_game" }
+openclaw_scripting = { path = "crates/openclaw_scripting" }
+openclaw_editor = { path = "crates/openclaw_editor" }
+openclaw_net = { path = "crates/openclaw_net" }
+openclaw_mod = { path = "crates/openclaw_mod" }
+
+[package]
+name = "openclaw"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+openclaw_core = { workspace = true }
+openclaw_rez = { workspace = true }
+openclaw_game = { workspace = true }
+openclaw_scripting = { workspace = true }
+openclaw_editor = { workspace = true }
+openclaw_net = { workspace = true }
+openclaw_mod = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }

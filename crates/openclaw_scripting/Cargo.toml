@@ -1,0 +1,16 @@
+[package]
+name = "openclaw_scripting"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Lua scripting engine for OpenClaw - custom game logic and modding"
+
+[dependencies]
+openclaw_core = { workspace = true }
+mlua = { version = "0.10", features = ["lua54", "vendored"] }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+glam = { workspace = true }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Video>
+        <WindowWidth>1280</WindowWidth>
+        <WindowHeight>720</WindowHeight>
+        <Fullscreen>false</Fullscreen>
+        <VSync>true</VSync>
+        <ScaleMode>KeepAspectRatio</ScaleMode>
+    </Video>
+    <Audio>
+        <MasterVolume>1.0</MasterVolume>
+        <MusicVolume>0.7</MusicVolume>
+        <SfxVolume>1.0</SfxVolume>
+        <EnableMidi>true</EnableMidi>
+        <SpatialAudio>true</SpatialAudio>
+    </Audio>
+    <Input>
+        <MoveLeft>Left,A</MoveLeft>
+        <MoveRight>Right,D</MoveRight>
+        <MoveUp>Up,W</MoveUp>
+        <MoveDown>Down,S</MoveDown>
+        <Jump>Space,Z</Jump>
+        <Attack>LCtrl,X</Attack>
+        <Pistol>1</Pistol>
+        <Dynamite>2</Dynamite>
+        <MagicClaw>3</MagicClaw>
+        <Pause>Escape</Pause>
+        <Console>F1</Console>
+        <Fullscreen>F11</Fullscreen>
+        <Screenshot>F12</Screenshot>
+    </Input>
+    <Game>
+        <Difficulty>Normal</Difficulty>
+        <Language>en</Language>
+        <ShowFPS>false</ShowFPS>
+        <DebugPhysics>false</DebugPhysics>
+        <ModsDirectory>mods</ModsDirectory>
+        <EnableScripting>true</EnableScripting>
+    </Game>
+    <Multiplayer>
+        <PlayerName>Player</PlayerName>
+        <DefaultPort>27015</DefaultPort>
+        <MaxPlayers>4</MaxPlayers>
+    </Multiplayer>
+</Configuration>
