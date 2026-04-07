@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw - Captain Claw (1997) Rust Reimplementation</title>
+    <title>OpenBee - Captain Claw (1997) Rust Reimplementation</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -50,7 +50,7 @@
     </style>
 </head>
 <body>
-    <h1>OpenClaw</h1>
+    <h1>OpenBee</h1>
     <div id="game-container">
         <canvas id="canvas" width="1280" height="720"></canvas>
     </div>
@@ -61,11 +61,11 @@
         <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> Weapons &nbsp;
         <kbd>Esc</kbd> Pause
     </div>
-    <div id="loading">Loading OpenClaw...</div>
+    <div id="loading">Loading OpenBee...</div>
 
     <script type="module">
         // WASM entry point — load the compiled module
-        import init from './openclaw.js';
+        import init from './openbee.js';
 
         async function run() {
             try {

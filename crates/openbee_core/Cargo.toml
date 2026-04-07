@@ -1,0 +1,23 @@
+[package]
+name = "openbee_core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core engine library for OpenBee - ECS, physics, rendering, audio, input, events"
+
+[dependencies]
+glam = { workspace = true }
+bitflags = { workspace = true }
+byteorder = { workspace = true }
+rustc-hash = { workspace = true }
+image = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+quick-xml = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+rapier2d = "0.22"
+rodio = "0.20"
+midly = "0.5"
+gilrs = "0.11"

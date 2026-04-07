@@ -1,8 +1,8 @@
-# OpenClaw-RS
+# OpenBee 🐝
 
-A complete Rust reimplementation of [OpenClaw](https://github.com/pjasicek/OpenClaw) — the open-source engine for **Captain Claw** (1997), the classic 2D platformer by Monolith Productions.
+A hardworking bee engine — a complete Rust reimplementation of [OpenClaw](https://github.com/pjasicek/OpenClaw), the open-source engine for **Captain Claw** (1997), the classic 2D platformer by Monolith Productions.
 
-This project is a "mega" engine that 1:1 replicates every feature of the original OpenClaw C++ engine, plus adds modern enhancements including a level editor, Lua scripting, multiplayer support, mod system, and more.
+OpenBee is a "mega" engine that 1:1 replicates every feature of the original OpenClaw C++ engine, plus adds modern enhancements including a level editor, Lua scripting, multiplayer support, mod system, and more. Built from scratch in Rust for safety, performance, and cross-platform deployment.
 
 ## Features
 
@@ -30,22 +30,28 @@ This project is a "mega" engine that 1:1 replicates every feature of the origina
 - **Particle System** — Configurable visual effects (explosions, sparkles, etc.)
 - **Gamepad Support** — Full controller mapping via gilrs
 - **Remappable Controls** — User-configurable keybindings
-- **Achievement System** — Track player progress and milestones
-- **Localization** — Multi-language support (i18n)
-- **Accessibility** — Difficulty settings, colorblind modes
+- **Achievement System** — 30+ achievements tracking player progress
+- **Localization** — Multi-language support (English, Chinese, extensible)
+- **Accessibility** — Colorblind modes, difficulty assists, UI scaling
 - **Spatial Audio** — Positional 3D audio for immersive sound
+- **Weather System** — Rain, snow, fog, thunderstorms with wind physics
+- **Cutscene/Dialogue** — Scripted sequences, branching dialogue trees
+- **Inventory System** — Items, equipment, collectibles
+- **Advanced Movement** — Wall jump, double jump, dash, wall slide, swimming, ladders
+- **Speedrun Timer** — Split tracking with personal bests
+- **WASM/Web** — Browser deployment via WebAssembly
 
 ## Architecture
 
 ```
 crates/
-├── openclaw_core/      # Core engine: ECS, physics, rendering, audio, input, events, scene
-├── openclaw_rez/       # CLAW.REZ archive & asset format parsers
-├── openclaw_game/      # Game logic: components, systems, AI, levels, UI
-├── openclaw_scripting/ # Lua 5.4 scripting engine
-├── openclaw_editor/    # Visual level editor (egui)
-├── openclaw_net/       # Multiplayer networking & replay
-└── openclaw_mod/       # Mod loading & asset override system
+├── openbee_core/      # Core engine: ECS, physics, rendering, audio, input, events, scene
+├── openbee_rez/       # CLAW.REZ archive & asset format parsers
+├── openbee_game/      # Game logic: components, systems, AI, levels, UI
+├── openbee_scripting/ # Lua 5.4 scripting engine
+├── openbee_editor/    # Visual level editor (egui)
+├── openbee_net/       # Multiplayer networking & replay
+└── openbee_mod/       # Mod loading & asset override system
 ```
 
 ### Technology Stack
@@ -87,7 +93,7 @@ cargo test
 ## Usage
 
 ```bash
-openclaw [OPTIONS] [REZ_FILE]
+openbee [OPTIONS] [REZ_FILE]
 
 OPTIONS:
     -h, --help                       Show help
