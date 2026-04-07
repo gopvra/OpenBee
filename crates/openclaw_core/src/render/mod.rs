@@ -3,9 +3,11 @@
 pub mod animation;
 pub mod particle;
 pub mod renderer;
+pub mod screenshot;
 pub mod sdl2_renderer;
 pub mod shader;
 pub mod sprite;
+pub mod web_renderer;
 
 pub use animation::{Animation, AnimationPlayer};
 pub use particle::{Particle, ParticleEmitter, ParticleSystem};

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw - Captain Claw (1997) Rust Reimplementation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+        }
+        h1 { margin-bottom: 10px; color: #ffd700; }
+        #game-container {
+            border: 2px solid #ffd700;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+        .controls {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #aaa;
+            text-align: center;
+        }
+        .controls kbd {
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-family: monospace;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <h1>OpenClaw</h1>
+    <div id="game-container">
+        <canvas id="canvas" width="1280" height="720"></canvas>
+    </div>
+    <div class="controls">
+        <kbd>Arrows</kbd>/<kbd>WASD</kbd> Move &nbsp;
+        <kbd>Space</kbd> Jump &nbsp;
+        <kbd>Ctrl</kbd> Attack &nbsp;
+        <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> Weapons &nbsp;
+        <kbd>Esc</kbd> Pause
+    </div>
+    <div id="loading">Loading OpenClaw...</div>
+
+    <script type="module">
+        // WASM entry point — load the compiled module
+        import init from './openclaw.js';
+
+        async function run() {
+            try {
+                await init();
+                document.getElementById('loading').style.display = 'none';
+            } catch (e) {
+                document.getElementById('loading').textContent =
+                    'Failed to load: ' + e.message;
+                console.error(e);
+            }
+        }
+
+        run();
+    </script>
+</body>
+</html>
