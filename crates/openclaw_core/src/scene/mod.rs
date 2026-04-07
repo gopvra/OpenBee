@@ -1,6 +1,7 @@
 //! Scene graph for rendering game worlds.
 
 pub mod actor_node;
+pub mod camera_effects;
 pub mod hud_node;
 pub mod node;
 pub mod scene;

@@ -12,6 +12,7 @@ pub mod explodeable;
 pub mod glitter;
 pub mod hazards;
 pub mod health;
+pub mod inventory;
 pub mod kinematic;
 pub mod life;
 pub mod loot;

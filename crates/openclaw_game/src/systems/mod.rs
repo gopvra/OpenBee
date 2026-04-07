@@ -1,10 +1,15 @@
 //! All ECS systems for the Captain Claw game loop.
 
+pub mod accessibility_system;
+pub mod achievement_system;
+pub mod advanced_movement_system;
 pub mod ai_system;
 pub mod animation_system;
 pub mod audio_system;
 pub mod checkpoint_system;
 pub mod combat_system;
+pub mod cutscene_system;
+pub mod destructible_system;
 pub mod hazard_system;
 pub mod input_system;
 pub mod movement_system;
@@ -16,6 +21,8 @@ pub mod render_system;
 pub mod score_system;
 pub mod spawner_system;
 pub mod trigger_system;
+pub mod water_system;
+pub mod weather_system;
 
 use openclaw_core::ecs::World;
 

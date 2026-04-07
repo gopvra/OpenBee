@@ -1,7 +1,9 @@
 //! Movement components for elevators, conveyors, ropes, etc.
 
+pub mod advanced;
 pub mod conveyor_belt;
 pub mod followable;
+pub mod one_way_platform;
 pub mod path_elevator;
 pub mod predefined_move;
 pub mod rope;
