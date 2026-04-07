@@ -1,0 +1,48 @@
+//! All game components for the Captain Claw ECS.
+
+pub mod ammo;
+pub mod animation;
+pub mod audio;
+pub mod aura;
+pub mod checkpoint;
+pub mod collision;
+pub mod controllable;
+pub mod destroyable;
+pub mod explodeable;
+pub mod glitter;
+pub mod hazards;
+pub mod health;
+pub mod kinematic;
+pub mod life;
+pub mod loot;
+pub mod movement;
+pub mod physics;
+pub mod pickup;
+pub mod powerup;
+pub mod render;
+pub mod score;
+pub mod sound;
+pub mod spawners;
+pub mod transform;
+pub mod triggers;
+
+pub use ammo::AmmoComponent;
+pub use animation::AnimationComponent;
+pub use aura::{AuraComponent, AuraType};
+pub use checkpoint::CheckpointComponent;
+pub use collision::CollisionComponent;
+pub use controllable::ControllableComponent;
+pub use destroyable::DestroyableComponent;
+pub use explodeable::ExplodeableComponent;
+pub use glitter::{GlitterComponent, GlitterType};
+pub use health::HealthComponent;
+pub use kinematic::KinematicComponent;
+pub use life::LifeComponent;
+pub use loot::{LootComponent, LootItem};
+pub use physics::{PhysicsBodyType, PhysicsComponent};
+pub use pickup::{AmmoType, PickupComponent, PickupType, TreasureType};
+pub use powerup::{PowerupComponent, PowerupType};
+pub use render::RenderComponent;
+pub use score::ScoreComponent;
+pub use sound::SoundComponent;
+pub use transform::TransformComponent;

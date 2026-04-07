@@ -1,0 +1,18 @@
+[package]
+name = "openclaw_editor"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Visual level editor for OpenClaw - tile/actor placement with egui"
+
+[dependencies]
+openclaw_core = { workspace = true }
+openclaw_rez = { workspace = true }
+openclaw_game = { workspace = true }
+egui = "0.31"
+glam = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
