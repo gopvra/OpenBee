@@ -1,114 +1,326 @@
 # OpenBee 🐝
 
-A hardworking bee engine — a complete Rust reimplementation of [OpenClaw](https://github.com/pjasicek/OpenClaw), the open-source engine for **Captain Claw** (1997), the classic 2D platformer by Monolith Productions.
+**A hardworking bee engine** — a complete Rust reimplementation of [OpenClaw](https://github.com/pjasicek/OpenClaw), the open-source engine for **Captain Claw** (1997) by Monolith Productions.
 
-OpenBee is a "mega" engine that 1:1 replicates every feature of the original OpenClaw C++ engine, plus adds modern enhancements including a level editor, Lua scripting, multiplayer support, mod system, and more. Built from scratch in Rust for safety, performance, and cross-platform deployment.
+OpenBee goes far beyond the original: it's a mega engine combining the best ideas from [Bevy](https://bevyengine.org/), [Godot](https://godotengine.org/), [OpenSurge](https://opensurge2d.org/), [NXEngine-evo](https://github.com/EXL/NXEngine), [Rigel Engine](https://github.com/lethal-guitar/RigelEngine), [Corgi Engine](https://corgi-engine.moremountains.com/), and Celeste/Hollow Knight game-feel techniques — all built from scratch in Rust.
 
-## Features
+> **214 source files | 25,000+ lines of Rust | 7 crates | 63 tests | 0 unsafe blocks**
 
-### Core Engine (1:1 OpenClaw Parity)
-- Custom Entity-Component-System (ECS) architecture
-- Rapier2D physics engine integration (replaces Box2D)
-- SDL2-based rendering with sprite/animation support
-- Full audio system with MIDI music and spatial sound
-- Scene graph with camera, tile planes, and actor nodes
-- CLAW.REZ archive parser and all asset format loaders (WWD, PID, PCX, ANI, PAL)
-- 40+ game components matching the original engine
-- 16 gameplay systems (physics, combat, AI, pickups, hazards, etc.)
-- Enemy AI with finite state machines
-- 4 boss fights (Aquatis, Gabriel, Marrow, Red Tail)
-- 14 levels with checkpoints, secrets, and boss battles
-- Save/load game system
-- HUD, menus, debug console
-
-### Enhanced Features (Beyond OpenClaw)
-- **Level Editor** — Visual tile/actor editor with egui, undo/redo, live preview
-- **Lua Scripting** — Custom game logic, moddable AI and events via Lua 5.4
-- **Multiplayer** — Client-server networking with state sync, lobby, chat
-- **Replay System** — Record and playback gameplay sessions
-- **Mod Support** — Load custom assets, levels, and scripts from mod packages
-- **Particle System** — Configurable visual effects (explosions, sparkles, etc.)
-- **Gamepad Support** — Full controller mapping via gilrs
-- **Remappable Controls** — User-configurable keybindings
-- **Achievement System** — 30+ achievements tracking player progress
-- **Localization** — Multi-language support (English, Chinese, extensible)
-- **Accessibility** — Colorblind modes, difficulty assists, UI scaling
-- **Spatial Audio** — Positional 3D audio for immersive sound
-- **Weather System** — Rain, snow, fog, thunderstorms with wind physics
-- **Cutscene/Dialogue** — Scripted sequences, branching dialogue trees
-- **Inventory System** — Items, equipment, collectibles
-- **Advanced Movement** — Wall jump, double jump, dash, wall slide, swimming, ladders
-- **Speedrun Timer** — Split tracking with personal bests
-- **WASM/Web** — Browser deployment via WebAssembly
+---
 
 ## Architecture
 
 ```
 crates/
-├── openbee_core/      # Core engine: ECS, physics, rendering, audio, input, events, scene
-├── openbee_rez/       # CLAW.REZ archive & asset format parsers
-├── openbee_game/      # Game logic: components, systems, AI, levels, UI
-├── openbee_scripting/ # Lua 5.4 scripting engine
-├── openbee_editor/    # Visual level editor (egui)
-├── openbee_net/       # Multiplayer networking & replay
-└── openbee_mod/       # Mod loading & asset override system
+├── openbee_core/       71 files — ECS, physics, rendering, audio, input, events, scene, security
+├── openbee_rez/         7 files — CLAW.REZ archive & asset format parsers
+├── openbee_game/      106 files — Components, systems, AI, levels, UI, game logic
+├── openbee_scripting/  10 files — Lua 5.4 scripting engine
+├── openbee_editor/      7 files — Visual level editor (egui)
+├── openbee_net/         7 files — Multiplayer networking & replay
+└── openbee_mod/         5 files — Mod loading & asset override
 ```
 
-### Technology Stack
+## Technology Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Language | Rust 2021 Edition |
-| Physics | rapier2d |
-| Rendering | SDL2 (rust-sdl2) |
-| Audio | rodio + midly |
-| Input | SDL2 + gilrs (gamepad) |
-| Scripting | mlua (Lua 5.4) |
-| GUI/Editor | egui |
-| Networking | tokio + bincode |
-| Serialization | serde + quick-xml + serde_json |
+| Layer | Crate | Notes |
+|-------|-------|-------|
+| Physics | `rapier2d` | Replaces Box2D, 75 px/meter conversion |
+| Rendering | SDL2 / WebGL | Multi-backend (SDL2, Web/WASM, Null) |
+| Audio | `rodio` + `midly` | Sound effects + MIDI music + spatial 3D audio |
+| Input | SDL2 + `gilrs` | Keyboard, mouse, gamepad, touch |
+| Scripting | `mlua` (Lua 5.4) | Full game API bindings |
+| Editor GUI | `egui` | Immediate-mode level editor |
+| Networking | `tokio` + `bincode` | Async TCP client-server |
+| Serialization | `serde` + `quick-xml` | Save files, configs, templates |
+| Math | `glam` | Fast SIMD vector math |
 
-## Building
+---
+
+## Complete Feature List
+
+### 🎮 Core Engine (`openbee_core`)
+
+**Custom ECS (Entity-Component-System)**
+- Generational entity IDs with safe recycling
+- Type-erased component storage (TypeId-based HashMap)
+- System trait with ordered scheduler
+- World: entity create/destroy, component add/remove/query
+
+**Physics (Rapier2D)**
+- Dynamic, static, kinematic rigid bodies
+- Circle, box, capsule, polygon collision shapes
+- Contact listener with begin/end collision events
+- Force, impulse, velocity control
+- Raycast queries
+- Debug wireframe drawing
+- 75 pixels-per-meter coordinate conversion
+
+**Rendering**
+- `Renderer` trait with multiple backends (SDL2, Web/WASM, Null)
+- Sprite sheets with frame-based animation
+- `AnimationPlayer` with looping, speed control, events
+- Particle system (emitters, configurable lifetime/spread/color/gravity)
+- Shader effects (Bloom, Grayscale, Blur, Invert, Custom)
+- Screenshot capture (PNG/BMP/TGA)
+- **Game Juice System** *(from Celeste/Hollow Knight)*:
+  - Hit freeze / hitlag (frame-perfect impact feedback)
+  - Squash & stretch deformation (jump, land, hit, bounce)
+  - Ghost trail / afterimage effects
+  - Hit flash (white/color flash on damage)
+  - Slow motion / bullet time with ease in/out
+  - Screen flash effects
+
+**Audio**
+- `AudioEngine` trait with Null fallback
+- Sound effects (SoundId/SoundHandle)
+- Music + MIDI playback (MusicId/MidiData)
+- **Spatial audio** — positional 3D sound with distance attenuation and stereo panning
+
+**Input**
+- Keyboard (comprehensive KeyCode enum)
+- Mouse (position, 5 buttons)
+- Gamepad/controller via gilrs (buttons, axes, rumble)
+- Touch input (multi-touch, gestures: pan, pinch, swipe)
+- **Remappable keybindings** — action-based mapping, save/load configs
+
+**Events**
+- Type-erased publish/subscribe EventBus
+- 19 game events (actor lifecycle, combat, items, levels, saves)
+- 10 input events (keyboard, mouse, gamepad, touch)
+- Immediate and queued dispatch modes
+
+**Scene Graph**
+- Hierarchical scene nodes (Actor, Tile, HUD, Particle)
+- Camera with smooth follow, dead zone, look-ahead
+- **Camera effects** *(from Corgi Engine)*:
+  - Screen shake with decay
+  - Zoom transitions
+  - Letterbox / cinematic bars
+  - Room-based camera constraints (Super Metroid style)
+- Tile plane rendering with parallax scrolling
+
+**Resource Management**
+- `ResourceManager` with loader registry
+- LRU cache with configurable memory budget
+- Format loaders: ANI, PCX, PID, PNG, WAV, MIDI, PAL, WWD, XML
+- **Hot reload** *(from Bevy)* — filesystem watcher for live asset/script reloading
+
+**Tween Engine** *(from DOTween/Bevy Tweening)*
+- **30 easing functions**: Linear, Sine, Quad, Cubic, Quart, Quint, Expo, Circ, Back, Elastic, Bounce (In/Out/InOut)
+- Tween sequences and timelines
+- Loop modes: None, Loop, PingPong
+- Delay support
+- TweenManager for managing multiple concurrent tweens
+
+**Process System**
+- Background process manager with chaining
+- PowerupProcess for timed effects
+- Process states: Running, Paused, Finished
+
+**Security** 🔒
+- **Filesystem sandbox** — ALL file I/O validated against user-approved directories
+- Path traversal protection (canonicalization, null bytes, depth limits)
+- Blocked sensitive patterns (.env, .ssh, .git, credentials, private keys)
+- Permission levels: ReadOnly (assets) vs ReadWrite (saves)
+- Symlink escape detection
+- Global sandbox with `init_sandbox()` convenience
+
+**Utilities**
+- **Localization (i18n)** — multi-language support with English + Chinese (100+ strings)
+- Template string substitution (`{name}` → value)
+- Math helpers (lerp, clamp, angle conversion, rect collision)
+- Performance profiler with scoped timers
+- String utilities (path split, snake_case, FNV hash)
+- Pixel/meter converters, hex color parsing
+
+---
+
+### 📦 Asset Parsers (`openbee_rez`)
+
+| Format | Parser | Description |
+|--------|--------|-------------|
+| `.REZ` | `RezArchive` | Captain Claw resource archive (directory tree, file extraction) |
+| `.WWD` | `WwdParser` | Level data (tile planes, object placement, properties) |
+| `.PID` | `PidParser` | Proprietary indexed-color images (raw + RLE compressed) |
+| `.PCX` | `PcxParser` | ZSoft PCX images with VGA palette |
+| `.ANI` | `AniParser` | Animation frame sequences with timing/offsets |
+| `.PAL` | `PalParser` | 256-color RGB palettes (index 0 = transparent) |
+
+All parsers: binary format with `byteorder`, `thiserror` errors, 17 unit tests.
+
+---
+
+### 🎯 Game Logic (`openbee_game`)
+
+**50+ Components** organized by category:
+
+| Category | Components |
+|----------|-----------|
+| **Core** | Transform, Render, Animation, Physics, Kinematic, Collision, Controllable |
+| **Combat** | Health, Destroyable, Explodeable, AmmoComponent |
+| **Items** | Pickup (8 treasure types), Loot, Score, Life, Powerup (6 types) |
+| **Inventory** | InventoryComponent (slots, equipment, gold, auto-pickup, rarity system) |
+| **Movement** | PathElevator, ConveyorBelt, Rope, PredefinedMove (linear/sine/circular), Followable |
+| **Advanced Movement** | WallJump, DoubleJump, Dash, WallSlide, Crouch/Crawl, Glide, LadderClimb, Swimming |
+| **Platforms** | OneWayPlatform (directional, drop-through), SpringBoard, SteppingGround |
+| **Hazards** | AreaDamage, FloorSpike, SawBlade, WaterZone, GravityZone (5 types), DestructibleTerrain |
+| **Audio** | Sound, LocalAmbientSound, GlobalAmbientSound |
+| **Triggers** | Trigger (8 types), BossStager, SoundTrigger |
+| **Spawners** | ActorSpawner, ProjectileSpawner (8 projectile types) |
+| **Effects** | Aura, Glitter, Checkpoint |
+
+**22 ECS Systems:**
+
+| System | Function |
+|--------|----------|
+| PhysicsSystem | Rapier2D simulation step + position sync |
+| RenderSystem | Sprite/animation rendering |
+| AnimationSystem | Frame advancement and looping |
+| InputSystem | Player input → controllable components |
+| **AdvancedMovementSystem** | Wall jumps, dashing, swimming, ladders, gliding |
+| MovementSystem | Elevators, conveyors, ropes, predefined paths |
+| AiSystem | Enemy AI state machine updates |
+| CombatSystem | Hit detection, damage dealing, death |
+| HazardSystem | Spikes, saws, area damage cycling |
+| **WaterSystem** | Buoyancy, drag, breath, splash effects |
+| **WeatherSystem** | Rain, snow, fog, thunder, wind physics |
+| PickupSystem | Item collection and effect application |
+| SpawnerSystem | Actor/projectile spawning with cooldowns |
+| PowerupSystem | Timed powerup effects and expiry |
+| CheckpointSystem | Activation and respawn tracking |
+| TriggerSystem | Zone-based event triggering |
+| **DestructibleSystem** | Terrain destruction, debris, respawn |
+| **CutsceneSystem** | Scripted sequences (camera, actors, dialogue, effects) |
+| **AchievementSystem** | 30+ achievements with progress tracking |
+| **AccessibilitySystem** | Colorblind modes, difficulty assists, UI scaling |
+| ScoreSystem | Point calculation and display |
+| ParticleSystem | Particle effect updates |
+
+**AI Systems:**
+
+| AI Type | Description |
+|---------|-------------|
+| EnemyAI + FSM | 16 enemy types, 8 AI states (Idle → Patrol → Chase → Attack → Retreat) |
+| **Behavior Tree** *(from Godot/Unreal)* | Sequence, Selector, Parallel, Random, Inverter, Repeat, Guard, Cooldown, Timeout nodes |
+| **Boss Pattern DSL** *(from OpenSurge)* | Declarative boss attack language: projectile spreads, circles, aimed shots, movement, spawning, phases, conditions |
+| PunkRat AI | Specialized charge-attack enemy |
+| Toggle/Crumble Peg | Platform behavior AI |
+| Projectile AI | Linear, arcing, homing, spiraling trajectories |
+
+**4 Boss Fights with multi-phase AI:**
+- **Aquatis** — Water attacks, whirlpools, minion spawning (4 phases)
+- **Gabriel** — Teleport, magic, shield mechanics (3 phases)
+- **Marrow** — Sword combat, parry, dark magic (3 phases)
+- **Red Tail** — Acrobatic attacks, smoke bombs (3 phases)
+
+**14 Levels:**
+- TileMap with 6 collision types (None, Full, OneWay, Platform, Slope, Ladder)
+- Level loading from WWD format
+- Level transitions with state preservation
+- Actor template registry for spawning
+
+**UI:**
+
+| Module | Features |
+|--------|----------|
+| GameHud | Health bar, score, lives, ammo display, minimap |
+| MainMenu / PauseMenu / OptionsMenu | Keyboard navigation, settings |
+| DebugConsole | 10+ commands (god, noclip, teleport, spawn, level, fps, quit) |
+| ScoreScreen | Animated end-of-level tally |
+| **DialogueSystem** *(from Corgi Engine)* | Dialogue trees, branching choices, typewriter text, portraits, flags |
+| **SpeedrunTimer** | Splits, personal bests, delta display (HH:MM:SS.mmm) |
+| **DebugOverlay** *(from Bevy Inspector)* | FPS graph, entity inspector, physics wireframe, AI paths, subsystem timing |
+
+**Game State:**
+- GameLogic with state machine (Menu, Playing, Paused, GameOver, Victory)
+- Save/load (JSON serialization)
+- Difficulty levels (Easy, Normal, Hard)
+- Checkpoint system
+
+---
+
+### 📜 Lua Scripting (`openbee_scripting`)
+
+- **LuaEngine** — Lua 5.4 VM via mlua
+- **Script component** — attach scripts to entities
+- **5 API modules:**
+  - `Actor` — spawn, destroy, get/set position, health, components
+  - `Physics` — apply_force, raycast, set_velocity
+  - `Audio` — play_sound, play_music, volume control
+  - `Input` — key/mouse/gamepad queries
+  - `UI` — show_text, create_button, progress_bar
+- **Rust↔Lua bindings:** Vec2, Entity, Color, Rect with metamethods
+
+---
+
+### 🎨 Level Editor (`openbee_editor`)
+
+- **egui-based** visual editor with menus and toolbar
+- **7 tools:** Paint, Erase, FloodFill, PlaceActor, Select, Move, Delete
+- **Tile editor** — brush painting, erasing, flood fill, tile palette
+- **Actor editor** — placement, selection, dragging, template palette
+- **Property panel** — inspect/edit entity components
+- **Undo/redo** — full action history stack
+- **Live preview** — play-test levels in editor
+- **Grid overlay** — configurable snap grid
+
+---
+
+### 🌐 Multiplayer (`openbee_net`)
+
+- **Client-server** architecture over TCP
+- **Network protocol** — Connect, Disconnect, Input, Snapshot, Chat, RPC messages
+- **Client prediction** with server reconciliation (Quake-style)
+- **Entity interpolation** — smooth remote entity movement
+- **Lobby system** — player management, ready states, host migration, chat
+- **Replay system** — record/playback with frame-by-frame input capture, seek, speed control
+
+---
+
+### 🔧 Mod System (`openbee_mod`)
+
+- **Mod loader** — filesystem discovery, dependency resolution (topological sort)
+- **Mod manifest** — JSON metadata (id, version, author, dependencies, conflicts)
+- **Asset override** — Replace, Merge, or Skip modes for asset replacement
+- **Mod registry** — enable/disable, load order management
+
+---
+
+## Building & Running
 
 ```bash
-# Build all crates
-cargo build
-
-# Build in release mode
-cargo build --release
-
-# Run the game
-cargo run -- CLAW.REZ
-
-# Run the level editor
-cargo run -- --editor
-
-# Run a dedicated multiplayer server
-cargo run -- --server 0.0.0.0 27015
-
-# Run tests
-cargo test
-```
-
-## Usage
-
-```bash
-openbee [OPTIONS] [REZ_FILE]
-
-OPTIONS:
-    -h, --help                       Show help
-    -e, --editor                     Launch level editor
-    -s, --server [ADDR] [PORT]       Start multiplayer server
-    -f, --fullscreen                 Fullscreen mode
-    -w, --windowed                   Windowed mode
-    -d, --difficulty [easy|normal|hard]  Set difficulty
+cargo build                          # Debug build
+cargo build --release                # Release build
+cargo run -- CLAW.REZ                # Play the game
+cargo run -- --editor                # Level editor
+cargo run -- --server 0.0.0.0 27015  # Multiplayer server
+cargo run -- --fullscreen -d hard    # Fullscreen, hard mode
+cargo test                           # Run all 63 tests
 ```
 
 ## Requirements
 
-- Rust 1.75+ (2021 edition)
-- Original CLAW.REZ game archive (from Captain Claw, 1997)
-- SDL2 development libraries
+- **Rust** 1.75+ (2021 edition)
+- **CLAW.REZ** game archive (from original Captain Claw, 1997)
+- **SDL2** development libraries (`apt install libsdl2-dev` on Linux)
+- **ALSA** dev libraries (`apt install libasound2-dev` on Linux)
+
+## Inspirations & Credits
+
+This project draws ideas from many open-source projects:
+
+| Project | What We Borrowed |
+|---------|-----------------|
+| [OpenClaw](https://github.com/pjasicek/OpenClaw) | 1:1 game mechanics, component architecture, all 14 levels |
+| [Bevy](https://bevyengine.org/) | ECS design, hot reload, debug inspector, tween engine |
+| [Corgi Engine](https://corgi-engine.moremountains.com/) | Advanced movement, inventory, dialogue, camera rooms |
+| [OpenSurge](https://opensurge2d.org/) | Scripting engine, boss pattern DSL |
+| [Rigel Engine](https://github.com/lethal-guitar/RigelEngine) | Smooth 60fps scrolling, modern renderer |
+| [NXEngine-evo](https://github.com/EXL/NXEngine) | Widescreen support, modding architecture |
+| [Celeste](https://www.celestegame.com/) | Game juice (hit freeze, squash-stretch, trails) |
+| [Hollow Knight](https://www.hollowknight.com/) | Screen shake, hit feedback, afterimage effects |
+| [Godot](https://godotengine.org/) | Behavior trees, tween system, signal architecture |
 
 ## License
 

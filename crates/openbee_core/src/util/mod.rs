@@ -5,7 +5,9 @@ pub mod i18n;
 pub mod math;
 pub mod profiler;
 pub mod string_util;
+pub mod tween;
 
 pub use converters::*;
 pub use math::*;
 pub use profiler::{Profiler, ProfilerStats, ScopedTimer};
+pub use tween::{EaseType, LoopMode, Tween, TweenManager, TweenSequence};
