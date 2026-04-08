@@ -47,6 +47,7 @@ openbee_scripting = { path = "crates/openbee_scripting" }
 openbee_editor = { path = "crates/openbee_editor" }
 openbee_net = { path = "crates/openbee_net" }
 openbee_mod = { path = "crates/openbee_mod" }
+openbee_wallet = { path = "crates/openbee_wallet" }
 
 [package]
 name = "openbee"
@@ -62,6 +63,7 @@ openbee_scripting = { workspace = true }
 openbee_editor = { workspace = true }
 openbee_net = { workspace = true }
 openbee_mod = { workspace = true }
+openbee_wallet = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }

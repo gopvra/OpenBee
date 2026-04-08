@@ -1852,6 +1852,7 @@ dependencies = [
  "openbee_net",
  "openbee_rez",
  "openbee_scripting",
+ "openbee_wallet",
  "tokio",
  "tracing",
  "tracing-subscriber",

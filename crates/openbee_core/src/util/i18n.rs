@@ -30,6 +30,9 @@ impl I18nManager {
         };
         mgr.load_locale(Self::default_english_strings());
         mgr.load_locale(Self::default_chinese_strings());
+        mgr.load_locale(Self::default_japanese_strings());
+        mgr.load_locale(Self::default_korean_strings());
+        mgr.load_locale(Self::default_spanish_strings());
         mgr
     }
 
@@ -281,6 +284,131 @@ impl I18nManager {
         LocaleData {
             language_code: "zh".into(),
             language_name: "中文".into(),
+            strings: s,
+        }
+    }
+    /// Default Japanese strings.
+    pub fn default_japanese_strings() -> LocaleData {
+        let mut s = HashMap::new();
+        s.insert("menu.new_game".into(), "ニューゲーム".into());
+        s.insert("menu.continue".into(), "つづきから".into());
+        s.insert("menu.options".into(), "オプション".into());
+        s.insert("menu.quit".into(), "終了".into());
+        s.insert("menu.pause".into(), "ポーズ".into());
+        s.insert("menu.resume".into(), "再開".into());
+        s.insert("menu.save_game".into(), "セーブ".into());
+        s.insert("menu.load_game".into(), "ロード".into());
+        s.insert("menu.main_menu".into(), "メインメニュー".into());
+        s.insert("hud.score".into(), "スコア".into());
+        s.insert("hud.lives".into(), "残機".into());
+        s.insert("hud.health".into(), "体力".into());
+        s.insert("hud.ammo".into(), "弾薬".into());
+        s.insert("hud.level".into(), "レベル".into());
+        s.insert("hud.time".into(), "タイム".into());
+        s.insert("game.game_over".into(), "ゲームオーバー".into());
+        s.insert("game.victory".into(), "勝利！".into());
+        s.insert("game.level_complete".into(), "ステージクリア！".into());
+        s.insert("game.loading".into(), "ロード中...".into());
+        s.insert("settings.video".into(), "映像".into());
+        s.insert("settings.audio".into(), "音声".into());
+        s.insert("settings.controls".into(), "操作".into());
+        s.insert("settings.language".into(), "言語".into());
+        s.insert("settings.difficulty".into(), "難易度".into());
+        s.insert("settings.easy".into(), "やさしい".into());
+        s.insert("settings.normal".into(), "ふつう".into());
+        s.insert("settings.hard".into(), "むずかしい".into());
+        s.insert("achievement.unlocked".into(), "実績解除！".into());
+        s.insert("net.connecting".into(), "接続中...".into());
+        s.insert("net.lobby".into(), "ロビー".into());
+        s.insert("net.ready".into(), "準備完了".into());
+        s.insert("net.start".into(), "ゲーム開始".into());
+        LocaleData {
+            language_code: "ja".into(),
+            language_name: "日本語".into(),
+            strings: s,
+        }
+    }
+
+    /// Default Korean strings.
+    pub fn default_korean_strings() -> LocaleData {
+        let mut s = HashMap::new();
+        s.insert("menu.new_game".into(), "새 게임".into());
+        s.insert("menu.continue".into(), "계속하기".into());
+        s.insert("menu.options".into(), "옵션".into());
+        s.insert("menu.quit".into(), "종료".into());
+        s.insert("menu.pause".into(), "일시정지".into());
+        s.insert("menu.resume".into(), "게임 재개".into());
+        s.insert("menu.save_game".into(), "게임 저장".into());
+        s.insert("menu.load_game".into(), "게임 불러오기".into());
+        s.insert("menu.main_menu".into(), "메인 메뉴".into());
+        s.insert("hud.score".into(), "점수".into());
+        s.insert("hud.lives".into(), "목숨".into());
+        s.insert("hud.health".into(), "체력".into());
+        s.insert("hud.ammo".into(), "탄약".into());
+        s.insert("hud.level".into(), "레벨".into());
+        s.insert("hud.time".into(), "시간".into());
+        s.insert("game.game_over".into(), "게임 오버".into());
+        s.insert("game.victory".into(), "승리!".into());
+        s.insert("game.level_complete".into(), "스테이지 클리어!".into());
+        s.insert("game.loading".into(), "로딩 중...".into());
+        s.insert("settings.video".into(), "영상".into());
+        s.insert("settings.audio".into(), "오디오".into());
+        s.insert("settings.controls".into(), "조작".into());
+        s.insert("settings.language".into(), "언어".into());
+        s.insert("settings.difficulty".into(), "난이도".into());
+        s.insert("settings.easy".into(), "쉬움".into());
+        s.insert("settings.normal".into(), "보통".into());
+        s.insert("settings.hard".into(), "어려움".into());
+        s.insert("achievement.unlocked".into(), "업적 달성!".into());
+        s.insert("net.connecting".into(), "연결 중...".into());
+        s.insert("net.lobby".into(), "로비".into());
+        s.insert("net.ready".into(), "준비 완료".into());
+        s.insert("net.start".into(), "게임 시작".into());
+        LocaleData {
+            language_code: "ko".into(),
+            language_name: "한국어".into(),
+            strings: s,
+        }
+    }
+
+    /// Default Spanish strings.
+    pub fn default_spanish_strings() -> LocaleData {
+        let mut s = HashMap::new();
+        s.insert("menu.new_game".into(), "Nueva Partida".into());
+        s.insert("menu.continue".into(), "Continuar".into());
+        s.insert("menu.options".into(), "Opciones".into());
+        s.insert("menu.quit".into(), "Salir".into());
+        s.insert("menu.pause".into(), "Pausa".into());
+        s.insert("menu.resume".into(), "Reanudar".into());
+        s.insert("menu.save_game".into(), "Guardar Partida".into());
+        s.insert("menu.load_game".into(), "Cargar Partida".into());
+        s.insert("menu.main_menu".into(), "Menu Principal".into());
+        s.insert("hud.score".into(), "Puntos".into());
+        s.insert("hud.lives".into(), "Vidas".into());
+        s.insert("hud.health".into(), "Salud".into());
+        s.insert("hud.ammo".into(), "Municion".into());
+        s.insert("hud.level".into(), "Nivel".into());
+        s.insert("hud.time".into(), "Tiempo".into());
+        s.insert("game.game_over".into(), "Fin del Juego".into());
+        s.insert("game.victory".into(), "Victoria!".into());
+        s.insert("game.level_complete".into(), "Nivel Completado!".into());
+        s.insert("game.loading".into(), "Cargando...".into());
+        s.insert("settings.video".into(), "Video".into());
+        s.insert("settings.audio".into(), "Audio".into());
+        s.insert("settings.controls".into(), "Controles".into());
+        s.insert("settings.language".into(), "Idioma".into());
+        s.insert("settings.difficulty".into(), "Dificultad".into());
+        s.insert("settings.easy".into(), "Facil".into());
+        s.insert("settings.normal".into(), "Normal".into());
+        s.insert("settings.hard".into(), "Dificil".into());
+        s.insert("achievement.unlocked".into(), "Logro Desbloqueado!".into());
+        s.insert("net.connecting".into(), "Conectando...".into());
+        s.insert("net.lobby".into(), "Sala".into());
+        s.insert("net.ready".into(), "Listo".into());
+        s.insert("net.start".into(), "Iniciar Partida".into());
+        LocaleData {
+            language_code: "es".into(),
+            language_name: "Espanol".into(),
             strings: s,
         }
     }
