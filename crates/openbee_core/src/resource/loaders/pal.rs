@@ -1,8 +1,8 @@
 //! Loader for Captain Claw PAL (palette) files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// A 256-color palette.
 #[derive(Debug, Clone)]

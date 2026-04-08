@@ -193,15 +193,13 @@ impl AccessibilitySystem {
     }
 
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
-        let json = serde_json::to_string_pretty(&self.settings)
-            .map_err(std::io::Error::other)?;
+        let json = serde_json::to_string_pretty(&self.settings).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
         let json = std::fs::read_to_string(path)?;
-        self.settings = serde_json::from_str(&json)
-            .map_err(std::io::Error::other)?;
+        self.settings = serde_json::from_str(&json).map_err(std::io::Error::other)?;
         Ok(())
     }
 }

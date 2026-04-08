@@ -34,11 +34,17 @@ pub fn draw_menu_bar(ui: &mut Ui, app: &mut EditorApp) {
         ui.menu_button("Edit", |ui| {
             let can_undo = !app.undo_stack.is_empty();
             let can_redo = !app.redo_stack.is_empty();
-            if ui.add_enabled(can_undo, egui::Button::new("Undo")).clicked() {
+            if ui
+                .add_enabled(can_undo, egui::Button::new("Undo"))
+                .clicked()
+            {
                 app.undo();
                 ui.close_menu();
             }
-            if ui.add_enabled(can_redo, egui::Button::new("Redo")).clicked() {
+            if ui
+                .add_enabled(can_redo, egui::Button::new("Redo"))
+                .clicked()
+            {
                 app.redo();
                 ui.close_menu();
             }

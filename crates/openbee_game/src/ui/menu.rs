@@ -47,7 +47,12 @@ impl MenuBase {
         let center_x = sw as f32 / 2.0;
 
         // Title
-        renderer.draw_text(title, Vec2::new(center_x - 80.0, start_y), 24.0, Color::rgb(255, 215, 0));
+        renderer.draw_text(
+            title,
+            Vec2::new(center_x - 80.0, start_y),
+            24.0,
+            Color::rgb(255, 215, 0),
+        );
 
         // Menu items
         for (i, item) in self.items.iter().enumerate() {
@@ -61,7 +66,12 @@ impl MenuBase {
 
             // Selection indicator
             if i == self.selected_index {
-                renderer.draw_text(">", Vec2::new(center_x - 80.0, y), 18.0, Color::rgb(255, 255, 0));
+                renderer.draw_text(
+                    ">",
+                    Vec2::new(center_x - 80.0, y),
+                    18.0,
+                    Color::rgb(255, 255, 0),
+                );
             }
         }
     }
@@ -233,13 +243,22 @@ impl OptionsMenu {
         let start_y = sh as f32 * 0.25;
         let center_x = sw as f32 / 2.0;
 
-        renderer.draw_text("OPTIONS", Vec2::new(center_x - 50.0, start_y), 24.0, Color::rgb(255, 215, 0));
+        renderer.draw_text(
+            "OPTIONS",
+            Vec2::new(center_x - 50.0, start_y),
+            24.0,
+            Color::rgb(255, 215, 0),
+        );
 
         let values = [
             format!("{:.0}%", self.master_volume * 100.0),
             format!("{:.0}%", self.music_volume * 100.0),
             format!("{:.0}%", self.sfx_volume * 100.0),
-            if self.fullscreen { "ON".to_string() } else { "OFF".to_string() },
+            if self.fullscreen {
+                "ON".to_string()
+            } else {
+                "OFF".to_string()
+            },
             String::new(),
         ];
 

@@ -48,10 +48,16 @@ impl BeeHumanView {
                 if let Some(bounds) = &self.camera_bounds {
                     let half_w = self.screen_width as f32 * 0.5 / self.camera.zoom;
                     let half_h = self.screen_height as f32 * 0.5 / self.camera.zoom;
-                    self.camera.position.x = self.camera.position.x
+                    self.camera.position.x = self
+                        .camera
+                        .position
+                        .x
                         .max(bounds.x + half_w)
                         .min(bounds.x + bounds.width - half_w);
-                    self.camera.position.y = self.camera.position.y
+                    self.camera.position.y = self
+                        .camera
+                        .position
+                        .y
                         .max(bounds.y + half_h)
                         .min(bounds.y + bounds.height - half_h);
                 }

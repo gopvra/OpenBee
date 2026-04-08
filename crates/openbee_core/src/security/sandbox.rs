@@ -153,7 +153,13 @@ impl SandboxedFs {
         let allowed = self.allowed.read().unwrap();
         allowed
             .iter()
-            .map(|d| (d.canonical.display().to_string(), d.permission, d.label.clone()))
+            .map(|d| {
+                (
+                    d.canonical.display().to_string(),
+                    d.permission,
+                    d.label.clone(),
+                )
+            })
             .collect()
     }
 
@@ -230,7 +236,9 @@ impl SandboxedFs {
 
     /// Check if a path exists, sandbox-checked.
     pub fn exists(&self, path: impl AsRef<Path>) -> bool {
-        self.validate_read(path).map(|p| p.exists()).unwrap_or(false)
+        self.validate_read(path)
+            .map(|p| p.exists())
+            .unwrap_or(false)
     }
 
     // ---- Internal ----
@@ -251,7 +259,10 @@ impl SandboxedFs {
         let component_count = path.components().count();
         if component_count > self.max_path_depth {
             return Err(SandboxError::PathTraversal {
-                path: format!("Path too deep ({} components, max {})", component_count, self.max_path_depth),
+                path: format!(
+                    "Path too deep ({} components, max {})",
+                    component_count, self.max_path_depth
+                ),
             });
         }
 
@@ -386,8 +397,12 @@ mod tests {
     fn test_sandbox_blocks_traversal_patterns() {
         let sandbox = SandboxedFs::new();
         assert!(sandbox.validate_read(Path::new("/some/.env/file")).is_err());
-        assert!(sandbox.validate_read(Path::new("/path/to/.ssh/key")).is_err());
-        assert!(sandbox.validate_read(Path::new("/path/to/.git/config")).is_err());
+        assert!(sandbox
+            .validate_read(Path::new("/path/to/.ssh/key"))
+            .is_err());
+        assert!(sandbox
+            .validate_read(Path::new("/path/to/.git/config"))
+            .is_err());
     }
 
     #[test]

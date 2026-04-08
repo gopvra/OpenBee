@@ -97,7 +97,10 @@ impl ScoreScreen {
 
         // Level name
         renderer.draw_text(
-            &format!("Level {} - {}", self.stats.level_number, self.stats.level_name),
+            &format!(
+                "Level {} - {}",
+                self.stats.level_number, self.stats.level_name
+            ),
             Vec2::new(center_x - 120.0, start_y),
             24.0,
             Color::rgb(255, 215, 0),
@@ -125,10 +128,7 @@ impl ScoreScreen {
             ),
             (
                 "SECRETS".to_string(),
-                format!(
-                    "{}/{}",
-                    self.stats.secrets_found, self.stats.secrets_total
-                ),
+                format!("{}/{}", self.stats.secrets_found, self.stats.secrets_total),
             ),
         ];
 
@@ -138,7 +138,12 @@ impl ScoreScreen {
         for (i, (label, value)) in lines[..lines_to_show].iter().enumerate() {
             let y = start_y + 60.0 + i as f32 * 35.0;
             renderer.draw_text(label, Vec2::new(center_x - 120.0, y), 18.0, Color::WHITE);
-            renderer.draw_text(value, Vec2::new(center_x + 60.0, y), 18.0, Color::rgb(255, 255, 0));
+            renderer.draw_text(
+                value,
+                Vec2::new(center_x + 60.0, y),
+                18.0,
+                Color::rgb(255, 255, 0),
+            );
         }
 
         // Continue prompt

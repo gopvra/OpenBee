@@ -460,10 +460,8 @@ impl WwdFile {
         // Resolve string offsets
         let name = read_string_table_entry(full_data, name_offset).unwrap_or_default();
         let logic = read_string_table_entry(full_data, logic_offset).unwrap_or_default();
-        let image_set =
-            read_string_table_entry(full_data, image_set_offset).unwrap_or_default();
-        let animation =
-            read_string_table_entry(full_data, animation_offset).unwrap_or_default();
+        let image_set = read_string_table_entry(full_data, image_set_offset).unwrap_or_default();
+        let animation = read_string_table_entry(full_data, animation_offset).unwrap_or_default();
 
         Ok(WwdObject {
             id,
@@ -513,7 +511,9 @@ mod tests {
         use byteorder::WriteBytesExt;
 
         // header_size
-        cursor.write_u32::<LittleEndian>(WWD_HEADER_SIZE as u32).unwrap();
+        cursor
+            .write_u32::<LittleEndian>(WWD_HEADER_SIZE as u32)
+            .unwrap();
         // unknown1
         cursor.write_u32::<LittleEndian>(0).unwrap();
         // flags
@@ -523,7 +523,9 @@ mod tests {
 
         // String offsets — all point to string_table_offset
         for _ in 0..6 {
-            cursor.write_u32::<LittleEndian>(string_table_offset).unwrap();
+            cursor
+                .write_u32::<LittleEndian>(string_table_offset)
+                .unwrap();
         }
 
         // start_x, start_y
@@ -536,7 +538,9 @@ mod tests {
         // num_planes = 0
         cursor.write_u32::<LittleEndian>(0).unwrap();
         // exe_file offset
-        cursor.write_u32::<LittleEndian>(string_table_offset).unwrap();
+        cursor
+            .write_u32::<LittleEndian>(string_table_offset)
+            .unwrap();
 
         // Rest is already zeroed
 

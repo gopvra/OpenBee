@@ -2,11 +2,11 @@
 
 use openbee_core::ecs::{System, World};
 
+use crate::components::hazards::area_damage::AreaDamageComponent;
 use crate::components::hazards::floor_spike::{FloorSpikeComponent, SpikeState};
 use crate::components::hazards::saw_blade::SawBladeComponent;
 use crate::components::hazards::spring_board::SpringBoardComponent;
 use crate::components::hazards::stepping_ground::SteppingGroundComponent;
-use crate::components::hazards::area_damage::AreaDamageComponent;
 
 /// Updates environmental hazards: spikes, saw blades, spring boards, etc.
 pub struct HazardSystem;

@@ -149,7 +149,8 @@ impl TrailEffect {
         for ghost in &mut self.ghosts {
             ghost.lifetime -= dt;
             if self.ghost_lifetime > 0.0 {
-                ghost.opacity = (ghost.lifetime / self.ghost_lifetime).max(0.0) * self.opacity_decay;
+                ghost.opacity =
+                    (ghost.lifetime / self.ghost_lifetime).max(0.0) * self.opacity_decay;
             }
         }
         // Remove dead ghosts.

@@ -13,12 +13,7 @@ pub struct CombatSystem;
 
 impl CombatSystem {
     /// Check if two world-space rectangles overlap, given entity positions and local rects.
-    fn rects_overlap(
-        pos_a: &glam::Vec2,
-        rect_a: &Rect,
-        pos_b: &glam::Vec2,
-        rect_b: &Rect,
-    ) -> bool {
+    fn rects_overlap(pos_a: &glam::Vec2, rect_a: &Rect, pos_b: &glam::Vec2, rect_b: &Rect) -> bool {
         let a = Rect::new(
             pos_a.x + rect_a.x,
             pos_a.y + rect_a.y,
@@ -90,8 +85,12 @@ impl System for CombatSystem {
                     if atk_mask & collision.collision_layer == 0 {
                         continue;
                     }
-                    if Self::rects_overlap(atk_pos, atk_rect, &transform.position, &collision.hit_rect)
-                    {
+                    if Self::rects_overlap(
+                        atk_pos,
+                        atk_rect,
+                        &transform.position,
+                        &collision.hit_rect,
+                    ) {
                         // Base damage of 10 - in a full implementation this comes from the weapon.
                         damage_events.push((entity, 10));
                     }
@@ -110,7 +109,9 @@ impl System for CombatSystem {
                 }
 
                 if health.is_dead() {
-                    if let Some(destroyable) = world.get_component_mut::<DestroyableComponent>(entity) {
+                    if let Some(destroyable) =
+                        world.get_component_mut::<DestroyableComponent>(entity)
+                    {
                         destroyable.is_destroyed = true;
                     }
                 }

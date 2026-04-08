@@ -66,7 +66,8 @@ impl MovementSystem {
                 elevator.wait_timer = elevator.wait_time;
 
                 if elevator.one_way {
-                    elevator.current_waypoint = (elevator.current_waypoint + 1) % elevator.waypoints.len();
+                    elevator.current_waypoint =
+                        (elevator.current_waypoint + 1) % elevator.waypoints.len();
                 } else {
                     let next = elevator.current_waypoint as i32 + elevator.direction;
                     if next < 0 || next >= elevator.waypoints.len() as i32 {

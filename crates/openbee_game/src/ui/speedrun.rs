@@ -106,7 +106,8 @@ impl SpeedrunTimer {
             None => true,
         };
         if is_new_best {
-            self.best_splits.insert(name.to_string(), self.total_time_ms);
+            self.best_splits
+                .insert(name.to_string(), self.total_time_ms);
         }
 
         self.current_split += 1;
@@ -151,8 +152,7 @@ impl SpeedrunTimer {
             best_splits: &self.best_splits,
             personal_best: self.personal_best,
         };
-        let json = serde_json::to_string_pretty(&data)
-            .map_err(std::io::Error::other)?;
+        let json = serde_json::to_string_pretty(&data).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
@@ -164,8 +164,7 @@ impl SpeedrunTimer {
             personal_best: Option<u64>,
         }
         let json = std::fs::read_to_string(path)?;
-        let data: SaveData = serde_json::from_str(&json)
-            .map_err(std::io::Error::other)?;
+        let data: SaveData = serde_json::from_str(&json).map_err(std::io::Error::other)?;
         self.best_splits = data.best_splits;
         self.personal_best = data.personal_best;
 
@@ -200,7 +199,8 @@ impl SpeedrunTimer {
         result.push((
             "Total".to_string(),
             Self::format_time(self.total_time_ms),
-            self.personal_best.map(|pb| self.total_time_ms as i64 - pb as i64),
+            self.personal_best
+                .map(|pb| self.total_time_ms as i64 - pb as i64),
         ));
         result
     }

@@ -20,12 +20,7 @@ pub struct TouchPoint {
 impl TouchPoint {
     /// Create a new touch point.
     pub fn new(id: TouchId, x: f32, y: f32, pressure: f32) -> Self {
-        Self {
-            id,
-            x,
-            y,
-            pressure,
-        }
+        Self { id, x, y, pressure }
     }
 }
 

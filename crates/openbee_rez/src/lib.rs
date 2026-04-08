@@ -10,16 +10,16 @@
 //! - **PCX** - standard PCX images (used for palettes/backgrounds)
 //! - **PAL** - 256-color palettes
 
+pub mod ani_parser;
+pub mod pal_parser;
+pub mod pcx_parser;
+pub mod pid_parser;
 pub mod rez_archive;
 pub mod wwd_parser;
-pub mod ani_parser;
-pub mod pid_parser;
-pub mod pcx_parser;
-pub mod pal_parser;
 
-pub use rez_archive::{RezArchive, RezEntry};
-pub use wwd_parser::{WwdFile, WwdHeader, WwdPlane, WwdObject, WwdRect};
 pub use ani_parser::{AniFile, AniFrame};
-pub use pid_parser::PidImage;
-pub use pcx_parser::PcxImage;
 pub use pal_parser::Palette;
+pub use pcx_parser::PcxImage;
+pub use pid_parser::PidImage;
+pub use rez_archive::{RezArchive, RezEntry};
+pub use wwd_parser::{WwdFile, WwdHeader, WwdObject, WwdPlane, WwdRect};

@@ -1,8 +1,8 @@
 //! Script component that can be attached to entities so that Lua scripts drive
 //! their behaviour each frame.
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// A value that can be exchanged between Rust and a Lua script property table.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

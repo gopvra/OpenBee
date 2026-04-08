@@ -154,7 +154,11 @@ impl ActorController {
         if let Some(kinematic) = world.get_component_mut::<KinematicComponent>(entity) {
             kinematic.velocity.x = move_x;
 
-            if can_jump && self.jump_buffer_timer > 0.0 && self.coyote_timer > 0.0 && !self.is_jumping {
+            if can_jump
+                && self.jump_buffer_timer > 0.0
+                && self.coyote_timer > 0.0
+                && !self.is_jumping
+            {
                 kinematic.velocity.y = self.constants.jump_force;
                 self.is_jumping = true;
                 self.coyote_timer = 0.0;

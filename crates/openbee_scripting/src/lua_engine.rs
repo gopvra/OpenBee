@@ -44,14 +44,10 @@ impl LuaEngine {
 
         // Compile and execute so that top-level definitions (functions, globals)
         // become available immediately.
-        self.lua
-            .load(source)
-            .set_name(name)
-            .exec()
-            .map_err(|e| {
-                error!("Failed to load script '{name}': {e}");
-                anyhow::anyhow!("Lua load error in '{name}': {e}")
-            })?;
+        self.lua.load(source).set_name(name).exec().map_err(|e| {
+            error!("Failed to load script '{name}': {e}");
+            anyhow::anyhow!("Lua load error in '{name}': {e}")
+        })?;
 
         self.loaded.insert(name.to_string());
         Ok(())
@@ -70,9 +66,9 @@ impl LuaEngine {
     /// Call a previously-defined global Lua function by name.
     pub fn call_function<A: IntoLuaMulti>(&self, name: &str, args: A) -> Result<()> {
         let globals = self.lua.globals();
-        let func: mlua::Function = globals.get(name).map_err(|e| {
-            anyhow::anyhow!("Lua function '{name}' not found: {e}")
-        })?;
+        let func: mlua::Function = globals
+            .get(name)
+            .map_err(|e| anyhow::anyhow!("Lua function '{name}' not found: {e}"))?;
         func.call::<()>(args).map_err(|e| {
             error!("Error calling Lua function '{name}': {e}");
             anyhow::anyhow!("Lua call error in '{name}': {e}")

@@ -1,8 +1,8 @@
 //! Loader for PNG image files using the `image` crate.
 
-use std::any::Any;
-use anyhow::Result;
 use super::ResourceLoader;
+use anyhow::Result;
+use std::any::Any;
 
 /// Parsed PNG image data.
 #[derive(Debug, Clone)]

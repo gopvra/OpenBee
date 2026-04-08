@@ -236,7 +236,7 @@ mod tests {
 
         // num_planes is at offset 65 in the PCX header
         buf[65] = 1; // num_planes
-        // bytes_per_line is at offset 66-67 (u16 LE)
+                     // bytes_per_line is at offset 66-67 (u16 LE)
         buf[66] = 2; // bytes_per_line = 2
         buf[67] = 0;
 

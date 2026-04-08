@@ -10,13 +10,15 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
     // Audio.play_sound(name, volume?, loop?)
     audio.set(
         "play_sound",
-        lua.create_function(|_, (name, volume, looping): (String, Option<f32>, Option<bool>)| {
-            let vol = volume.unwrap_or(1.0);
-            let lp = looping.unwrap_or(false);
-            debug!("Lua: Audio.play_sound('{name}', vol={vol}, loop={lp})");
-            // Return a handle ID that can be used to stop the sound later.
-            Ok(0u32)
-        })?,
+        lua.create_function(
+            |_, (name, volume, looping): (String, Option<f32>, Option<bool>)| {
+                let vol = volume.unwrap_or(1.0);
+                let lp = looping.unwrap_or(false);
+                debug!("Lua: Audio.play_sound('{name}', vol={vol}, loop={lp})");
+                // Return a handle ID that can be used to stop the sound later.
+                Ok(0u32)
+            },
+        )?,
     )?;
 
     // Audio.play_music(name, volume?, fade_in_ms?)

@@ -45,7 +45,10 @@ impl EventBus {
 
     /// Subscribe a handler for events of type `E`. Returns a subscription ID
     /// that can be used to unsubscribe later.
-    pub fn subscribe<E: Event>(&mut self, mut handler: impl FnMut(&E) + Send + 'static) -> SubscriptionId {
+    pub fn subscribe<E: Event>(
+        &mut self,
+        mut handler: impl FnMut(&E) + Send + 'static,
+    ) -> SubscriptionId {
         let id = SubscriptionId(self.next_id);
         self.next_id += 1;
 

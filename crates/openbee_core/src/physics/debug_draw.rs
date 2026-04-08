@@ -1,7 +1,7 @@
 //! Debug drawing trait for physics visualization.
 
-use glam::Vec2;
 use crate::render::renderer::Color;
+use glam::Vec2;
 
 /// Trait for debug-drawing physics shapes. Implement this on your renderer to visualize
 /// colliders, joints, and contact points.

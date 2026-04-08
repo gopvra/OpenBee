@@ -34,7 +34,8 @@ impl System for PowerupSystem {
                 if let Some(pt) = powerup_type {
                     match pt {
                         PowerupType::Invincibility => {
-                            if let Some(health) = world.get_component_mut::<HealthComponent>(entity) {
+                            if let Some(health) = world.get_component_mut::<HealthComponent>(entity)
+                            {
                                 health.invulnerable = false;
                             }
                         }

@@ -153,7 +153,9 @@ impl WeatherSystem {
     }
 
     pub fn set_weather(&mut self, config: WeatherConfig, transition_time: f32) {
-        if config.weather_type == WeatherType::Clear && self.config.weather_type == WeatherType::Clear {
+        if config.weather_type == WeatherType::Clear
+            && self.config.weather_type == WeatherType::Clear
+        {
             return;
         }
         self.transition_from = Some(self.config.clone());
@@ -207,7 +209,8 @@ impl WeatherSystem {
         }
 
         // Remove dead particles
-        self.particles.retain(|p| p.life > 0.0 && p.y < vy + vh + 50.0);
+        self.particles
+            .retain(|p| p.life > 0.0 && p.y < vy + vh + 50.0);
 
         // Lightning
         if self.config.lightning_interval > 0.0 {
@@ -228,10 +231,7 @@ impl WeatherSystem {
 
     pub fn get_wind_force(&self) -> (f32, f32) {
         if self.config.affects_physics {
-            (
-                self.config.wind_strength * self.config.wind_direction,
-                0.0,
-            )
+            (self.config.wind_strength * self.config.wind_direction, 0.0)
         } else {
             (0.0, 0.0)
         }

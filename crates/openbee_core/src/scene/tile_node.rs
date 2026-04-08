@@ -127,7 +127,11 @@ impl SceneNode for TilePlaneNode {
                     wty = wty.rem_euclid(self.layer.height as i32);
                 }
 
-                if wtx < 0 || wty < 0 || wtx >= self.layer.width as i32 || wty >= self.layer.height as i32 {
+                if wtx < 0
+                    || wty < 0
+                    || wtx >= self.layer.width as i32
+                    || wty >= self.layer.height as i32
+                {
                     continue;
                 }
 

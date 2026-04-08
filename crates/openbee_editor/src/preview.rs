@@ -16,7 +16,14 @@ pub fn draw_preview(ui: &mut Ui, app: &EditorApp) {
 
     // Draw grid
     if app.show_grid {
-        draw_grid(&painter, canvas_rect, app.grid_size, zoom, scroll_x, scroll_y);
+        draw_grid(
+            &painter,
+            canvas_rect,
+            app.grid_size,
+            zoom,
+            scroll_x,
+            scroll_y,
+        );
     }
 
     let Some(ref doc) = app.current_level else {
@@ -61,7 +68,12 @@ pub fn draw_preview(ui: &mut Ui, app: &EditorApp) {
                 let color = tile_id_to_color(tile_id);
                 let rect = EguiRect::from_min_size(Pos2::new(px, py), EguiVec2::new(size, size));
                 painter.rect_filled(rect, 0.0, color);
-                painter.rect_stroke(rect, 0.0, Stroke::new(1.0, Color32::DARK_GRAY), StrokeKind::Outside);
+                painter.rect_stroke(
+                    rect,
+                    0.0,
+                    Stroke::new(1.0, Color32::DARK_GRAY),
+                    StrokeKind::Outside,
+                );
             }
         }
     }
@@ -85,7 +97,12 @@ pub fn draw_preview(ui: &mut Ui, app: &EditorApp) {
         };
 
         painter.rect_filled(rect, 4.0, fill);
-        painter.rect_stroke(rect, 4.0, Stroke::new(1.0, Color32::WHITE), StrokeKind::Outside);
+        painter.rect_stroke(
+            rect,
+            4.0,
+            Stroke::new(1.0, Color32::WHITE),
+            StrokeKind::Outside,
+        );
 
         // Label
         painter.text(
@@ -107,7 +124,12 @@ pub fn draw_preview(ui: &mut Ui, app: &EditorApp) {
                 Pos2::new(px, py),
                 EguiVec2::new(half * 2.0, half * 2.0),
             );
-            painter.rect_stroke(rect, 0.0, Stroke::new(1.0, Color32::GREEN), StrokeKind::Outside);
+            painter.rect_stroke(
+                rect,
+                0.0,
+                Stroke::new(1.0, Color32::GREEN),
+                StrokeKind::Outside,
+            );
         }
     }
 }

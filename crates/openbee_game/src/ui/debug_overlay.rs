@@ -247,10 +247,7 @@ impl DebugOverlay {
 
     /// Cycle to the next overlay mode.
     pub fn toggle_mode(&mut self) {
-        let current_index = ALL_MODES
-            .iter()
-            .position(|&m| m == self.mode)
-            .unwrap_or(0);
+        let current_index = ALL_MODES.iter().position(|&m| m == self.mode).unwrap_or(0);
         let next_index = (current_index + 1) % ALL_MODES.len();
         self.mode = ALL_MODES[next_index];
     }
@@ -269,11 +266,7 @@ impl DebugOverlay {
         for (_, time_remaining) in self.log_messages.iter_mut() {
             *time_remaining -= dt;
         }
-        while self
-            .log_messages
-            .front()
-            .is_some_and(|(_, t)| *t <= 0.0)
-        {
+        while self.log_messages.front().is_some_and(|(_, t)| *t <= 0.0) {
             self.log_messages.pop_front();
         }
     }
@@ -283,8 +276,7 @@ impl DebugOverlay {
         if self.log_messages.len() >= self.max_log_messages {
             self.log_messages.pop_front();
         }
-        self.log_messages
-            .push_back((message.to_owned(), 5.0));
+        self.log_messages.push_back((message.to_owned(), 5.0));
     }
 
     /// Record a frame for the performance graph.

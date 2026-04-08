@@ -1,8 +1,8 @@
 //! Loader for Captain Claw PID (image) files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// Parsed PID image data.
 #[derive(Debug, Clone)]

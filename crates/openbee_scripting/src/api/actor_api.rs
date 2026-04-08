@@ -17,7 +17,10 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
             debug!("Lua: Actor.spawn('{template}', {x}, {y})");
             // In a live engine the spawn request would be forwarded to the ECS
             // World. For now we return a placeholder entity.
-            Ok(LuaEntity { id: 0, generation: 0 })
+            Ok(LuaEntity {
+                id: 0,
+                generation: 0,
+            })
         })?,
     )?;
 

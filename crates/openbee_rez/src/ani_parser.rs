@@ -98,8 +98,7 @@ impl AniFile {
                 path_buf.truncate(pos);
             }
 
-            let image_file =
-                String::from_utf8(path_buf).map_err(|_| AniError::InvalidString)?;
+            let image_file = String::from_utf8(path_buf).map_err(|_| AniError::InvalidString)?;
 
             frames.push(AniFrame {
                 duration_ms,

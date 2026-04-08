@@ -1,8 +1,8 @@
 //! Loader for XML configuration files.
 
-use std::any::Any;
-use anyhow::Result;
 use super::ResourceLoader;
+use anyhow::Result;
+use std::any::Any;
 
 /// Parsed XML data stored as a raw string.
 #[derive(Debug, Clone)]
@@ -23,10 +23,9 @@ impl ResourceLoader for XmlLoader {
     fn load(&self, data: &[u8], path: &str) -> Result<Box<dyn Any + Send + Sync>> {
         let content = String::from_utf8_lossy(data).into_owned();
         // Validate that it's parseable XML.
-        let _: quick_xml::events::Event =
-            quick_xml::reader::Reader::from_str(&content).read_event().map_err(|e| {
-                anyhow::anyhow!("Invalid XML in {}: {}", path, e)
-            })?;
+        let _: quick_xml::events::Event = quick_xml::reader::Reader::from_str(&content)
+            .read_event()
+            .map_err(|e| anyhow::anyhow!("Invalid XML in {}: {}", path, e))?;
         tracing::debug!("XmlLoader: loaded {} ({} bytes)", path, data.len());
         Ok(Box::new(XmlResource { content }))
     }

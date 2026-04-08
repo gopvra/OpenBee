@@ -10,9 +10,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{Mutex, RwLock};
 use tracing::{info, warn};
 
-use crate::protocol::{
-    self, ClientId, EntitySnapshot, NetworkMessage, PlayerInfo, ServerInfo,
-};
+use crate::protocol::{self, ClientId, EntitySnapshot, NetworkMessage, PlayerInfo, ServerInfo};
 
 /// Configuration for starting a game server.
 #[derive(Debug, Clone)]

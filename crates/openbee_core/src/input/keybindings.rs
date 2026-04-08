@@ -71,9 +71,7 @@ impl KeyBindingMap {
 
     /// Check if any input source is bound to an action.
     pub fn has_binding(&self, action: &str) -> bool {
-        self.bindings
-            .get(action)
-            .is_some_and(|v| !v.is_empty())
+        self.bindings.get(action).is_some_and(|v| !v.is_empty())
     }
 
     /// Return all action names.
@@ -110,8 +108,7 @@ impl KeyBindingMap {
             .bindings
             .iter()
             .map(|(action, sources)| {
-                let source_strs: Vec<String> =
-                    sources.iter().map(|s| format!("{:?}", s)).collect();
+                let source_strs: Vec<String> = sources.iter().map(|s| format!("{:?}", s)).collect();
                 (action.as_str(), source_strs)
             })
             .collect();

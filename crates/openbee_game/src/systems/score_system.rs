@@ -25,7 +25,8 @@ impl System for ScoreSystem {
                 world.get_component::<LifeComponent>(entity),
             ) {
                 // Check if score crossed an extra life threshold
-                let prev_lives_earned = ((score.score.saturating_sub(1)) / EXTRA_LIFE_THRESHOLD) as i32;
+                let prev_lives_earned =
+                    ((score.score.saturating_sub(1)) / EXTRA_LIFE_THRESHOLD) as i32;
                 let _ = prev_lives_earned; // Would compare with a stored counter
             }
         }

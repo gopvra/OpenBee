@@ -53,10 +53,8 @@ impl SaveData {
 pub fn save_game(data: &SaveData, path: &Path) -> Result<()> {
     sanitize_path(path)?;
     info!("Saving game to {:?}", path);
-    let json = serde_json::to_string_pretty(data)
-        .context("Failed to serialize save data")?;
-    std::fs::write(path, json)
-        .context("Failed to write save file")?;
+    let json = serde_json::to_string_pretty(data).context("Failed to serialize save data")?;
+    std::fs::write(path, json).context("Failed to write save file")?;
     info!("Game saved successfully");
     Ok(())
 }
@@ -73,10 +71,8 @@ pub fn load_game(path: &Path) -> Result<SaveData> {
         MAX_SAVE_FILE_SIZE
     );
     info!("Loading game from {:?}", path);
-    let json = std::fs::read_to_string(path)
-        .context("Failed to read save file")?;
-    let data: SaveData = serde_json::from_str(&json)
-        .context("Failed to deserialize save data")?;
+    let json = std::fs::read_to_string(path).context("Failed to read save file")?;
+    let data: SaveData = serde_json::from_str(&json).context("Failed to deserialize save data")?;
     if data.version != SaveData::CURRENT_VERSION {
         tracing::warn!(
             "Save file version {} differs from current version {}",
@@ -84,7 +80,10 @@ pub fn load_game(path: &Path) -> Result<SaveData> {
             SaveData::CURRENT_VERSION
         );
     }
-    info!("Game loaded successfully (level {}, score {})", data.current_level, data.score);
+    info!(
+        "Game loaded successfully (level {}, score {})",
+        data.current_level, data.score
+    );
     Ok(data)
 }
 
@@ -93,9 +92,7 @@ pub fn list_saves(directory: &Path) -> Result<Vec<std::path::PathBuf>> {
     let mut saves: Vec<_> = std::fs::read_dir(directory)
         .context("Failed to read saves directory")?
         .filter_map(|entry| entry.ok())
-        .filter(|entry| {
-            entry.path().extension().is_some_and(|ext| ext == "json")
-        })
+        .filter(|entry| entry.path().extension().is_some_and(|ext| ext == "json"))
         .map(|entry| entry.path())
         .collect();
     saves.sort();

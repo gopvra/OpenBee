@@ -130,9 +130,7 @@ impl RezArchive {
         let dir_size = size_cursor.read_u32::<LittleEndian>()? as usize;
 
         if dir_offset + dir_size > data.len() {
-            return Err(RezError::DirectoryOutOfBounds {
-                offset: dir_offset,
-            });
+            return Err(RezError::DirectoryOutOfBounds { offset: dir_offset });
         }
 
         let mut entries = HashMap::new();
@@ -180,8 +178,7 @@ impl RezArchive {
             }
 
             let name_bytes = &data[name_start..pos];
-            let name =
-                std::str::from_utf8(name_bytes).map_err(|_| RezError::InvalidName)?;
+            let name = std::str::from_utf8(name_bytes).map_err(|_| RezError::InvalidName)?;
             pos += 1; // skip null terminator
 
             let full_path = if prefix.is_empty() {

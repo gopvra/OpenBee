@@ -1,8 +1,8 @@
 //! Loader for PCX image files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// Parsed PCX image data.
 #[derive(Debug, Clone)]

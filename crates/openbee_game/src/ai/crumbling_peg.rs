@@ -69,7 +69,10 @@ impl CrumblingPegComponent {
 
     /// Whether the platform is currently solid (can be stood on).
     pub fn is_solid(&self) -> bool {
-        matches!(self.state, CrumblePegState::Idle | CrumblePegState::Crumbling)
+        matches!(
+            self.state,
+            CrumblePegState::Idle | CrumblePegState::Crumbling
+        )
     }
 }
 

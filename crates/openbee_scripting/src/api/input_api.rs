@@ -39,9 +39,7 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
     // Input.get_mouse_pos() -> Vec2
     input.set(
         "get_mouse_pos",
-        lua.create_function(|_, ()| {
-            Ok(LuaVec2 { x: 0.0, y: 0.0 })
-        })?,
+        lua.create_function(|_, ()| Ok(LuaVec2 { x: 0.0, y: 0.0 }))?,
     )?;
 
     // Input.is_mouse_button_pressed(button) -> bool
