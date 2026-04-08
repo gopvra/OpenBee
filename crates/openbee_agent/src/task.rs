@@ -7,18 +7,13 @@ use std::time::Instant;
 pub type TaskId = u64;
 
 /// Priority levels for task scheduling.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum TaskPriority {
     Low = 0,
+    #[default]
     Normal = 1,
     High = 2,
     Urgent = 3,
-}
-
-impl Default for TaskPriority {
-    fn default() -> Self {
-        Self::Normal
-    }
 }
 
 /// Current status of a task.

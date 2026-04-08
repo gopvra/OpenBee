@@ -2,10 +2,7 @@
 resolver = "2"
 members = [
     "crates/openbee_core",
-    "crates/openbee_rez",
-    "crates/openbee_game",
     "crates/openbee_scripting",
-    "crates/openbee_editor",
     "crates/openbee_net",
     "crates/openbee_mod",
     "crates/openbee_wallet",
@@ -20,17 +17,9 @@ license = "Apache-2.0"
 repository = "https://github.com/gopvra/OpenBee"
 
 [workspace.dependencies]
-# Core engine
-glam = { version = "0.29", features = ["serde"] }
-bitflags = "2"
-byteorder = "1"
-rustc-hash = "2"
-image = "0.25"
-
 # Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-quick-xml = { version = "0.37", features = ["serialize"] }
 
 # Logging & Error handling
 tracing = "0.1"
@@ -43,10 +32,7 @@ tokio = { version = "1", features = ["full"] }
 
 # Internal crates
 openbee_core = { path = "crates/openbee_core" }
-openbee_rez = { path = "crates/openbee_rez" }
-openbee_game = { path = "crates/openbee_game" }
 openbee_scripting = { path = "crates/openbee_scripting" }
-openbee_editor = { path = "crates/openbee_editor" }
 openbee_net = { path = "crates/openbee_net" }
 openbee_mod = { path = "crates/openbee_mod" }
 openbee_wallet = { path = "crates/openbee_wallet" }
@@ -61,15 +47,13 @@ license.workspace = true
 
 [dependencies]
 openbee_core = { workspace = true }
-openbee_rez = { workspace = true }
-openbee_game = { workspace = true }
-openbee_scripting = { workspace = true }
-openbee_editor = { workspace = true }
-openbee_net = { workspace = true }
-openbee_mod = { workspace = true }
 openbee_wallet = { workspace = true }
 openbee_browser = { workspace = true }
 openbee_agent = { workspace = true }
+openbee_scripting = { workspace = true }
+openbee_net = { workspace = true }
+openbee_mod = { workspace = true }
+serde_json = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }

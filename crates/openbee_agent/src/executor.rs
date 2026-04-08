@@ -34,10 +34,8 @@ impl TaskExecutor {
 
         for skill in self.skills.values() {
             let score = skill.can_handle(instruction);
-            if score > 0.0 {
-                if best.is_none() || score > best.unwrap().1 {
-                    best = Some((skill.name(), score));
-                }
+            if score > 0.0 && (best.is_none() || score > best.unwrap().1) {
+                best = Some((skill.name(), score));
             }
         }
 

@@ -3,7 +3,7 @@ name = "openbee_scripting"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Lua scripting engine for OpenBee - custom game logic and modding"
+description = "Lua scripting engine for OpenBee Agent — extensible automation via Lua 5.4"
 
 [dependencies]
 openbee_core = { workspace = true }
@@ -13,4 +13,3 @@ thiserror = { workspace = true }
 anyhow = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-glam = { workspace = true }
