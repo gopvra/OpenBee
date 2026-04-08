@@ -190,94 +190,107 @@ impl ChainBackend for EthereumChain {
 // ===========================================================================
 // Minimal RLP encoder (just enough for legacy Ethereum transactions)
 // ===========================================================================
+//
+// These helpers are re-exported via `rlp_helpers` so that other EVM-compatible
+// chain backends (`evm.rs`) can reuse them without duplication.
 
-/// An item in an RLP structure: either raw bytes or a nested list.
-enum RlpItem {
-    Bytes(Vec<u8>),
-    #[allow(dead_code)]
-    List(Vec<RlpItem>),
-}
-
-impl RlpItem {
-    /// Encode an unsigned integer as the shortest big-endian byte representation.
-    /// Zero encodes as an empty byte string (RLP convention).
-    fn uint(value: u128) -> Self {
-        if value == 0 {
-            RlpItem::Bytes(vec![])
-        } else {
-            let bytes = value.to_be_bytes();
-            let start = bytes.iter().position(|&b| b != 0).unwrap_or(bytes.len());
-            RlpItem::Bytes(bytes[start..].to_vec())
-        }
+/// Public RLP helpers reused by other EVM-compatible chain backends.
+pub mod rlp_helpers {
+    /// An item in an RLP structure: either raw bytes or a nested list.
+    pub enum RlpItem {
+        Bytes(Vec<u8>),
+        #[allow(dead_code)]
+        List(Vec<RlpItem>),
     }
-}
 
-/// RLP-encode a single item.
-fn rlp_encode(item: &RlpItem) -> Vec<u8> {
-    match item {
-        RlpItem::Bytes(b) => {
-            if b.is_empty() {
-                // Empty byte string
-                vec![0x80]
-            } else if b.len() == 1 && b[0] < 0x80 {
-                // Single byte in [0x00, 0x7f] is its own RLP encoding.
-                vec![b[0]]
-            } else if b.len() <= 55 {
-                let mut out = vec![0x80 + b.len() as u8];
-                out.extend_from_slice(b);
-                out
+    impl RlpItem {
+        /// Encode an unsigned integer as the shortest big-endian byte representation.
+        /// Zero encodes as an empty byte string (RLP convention).
+        pub fn uint(value: u128) -> Self {
+            if value == 0 {
+                RlpItem::Bytes(vec![])
             } else {
-                let len_bytes = encode_length(b.len());
-                let mut out = vec![0xb7 + len_bytes.len() as u8];
-                out.extend_from_slice(&len_bytes);
-                out.extend_from_slice(b);
-                out
+                let bytes = value.to_be_bytes();
+                let start = bytes.iter().position(|&b| b != 0).unwrap_or(bytes.len());
+                RlpItem::Bytes(bytes[start..].to_vec())
             }
         }
-        RlpItem::List(items) => {
-            let payload: Vec<u8> = items.iter().flat_map(rlp_encode).collect();
-            rlp_encode_list_payload(&payload)
+    }
+
+    /// RLP-encode a single item.
+    pub fn rlp_encode(item: &RlpItem) -> Vec<u8> {
+        match item {
+            RlpItem::Bytes(b) => {
+                if b.is_empty() {
+                    // Empty byte string
+                    vec![0x80]
+                } else if b.len() == 1 && b[0] < 0x80 {
+                    // Single byte in [0x00, 0x7f] is its own RLP encoding.
+                    vec![b[0]]
+                } else if b.len() <= 55 {
+                    let mut out = vec![0x80 + b.len() as u8];
+                    out.extend_from_slice(b);
+                    out
+                } else {
+                    let len_bytes = encode_length(b.len());
+                    let mut out = vec![0xb7 + len_bytes.len() as u8];
+                    out.extend_from_slice(&len_bytes);
+                    out.extend_from_slice(b);
+                    out
+                }
+            }
+            RlpItem::List(items) => {
+                let payload: Vec<u8> = items.iter().flat_map(rlp_encode).collect();
+                rlp_encode_list_payload(&payload)
+            }
+        }
+    }
+
+    /// Wrap already-encoded payload bytes in an RLP list header.
+    pub fn rlp_encode_list_payload(payload: &[u8]) -> Vec<u8> {
+        if payload.len() <= 55 {
+            let mut out = vec![0xc0 + payload.len() as u8];
+            out.extend_from_slice(payload);
+            out
+        } else {
+            let len_bytes = encode_length(payload.len());
+            let mut out = vec![0xf7 + len_bytes.len() as u8];
+            out.extend_from_slice(&len_bytes);
+            out.extend_from_slice(payload);
+            out
+        }
+    }
+
+    /// Encode a flat list of items.
+    pub fn rlp_encode_list(items: &[RlpItem]) -> Vec<u8> {
+        let payload: Vec<u8> = items.iter().flat_map(rlp_encode).collect();
+        rlp_encode_list_payload(&payload)
+    }
+
+    /// Big-endian encoding of `len` without leading zeros.
+    pub fn encode_length(len: usize) -> Vec<u8> {
+        let bytes = (len as u64).to_be_bytes();
+        let start = bytes.iter().position(|&b| b != 0).unwrap_or(bytes.len());
+        bytes[start..].to_vec()
+    }
+
+    /// Strip leading zero bytes from a byte slice.
+    pub fn trim_leading_zeros(data: &[u8]) -> &[u8] {
+        let start = data.iter().position(|&b| b != 0).unwrap_or(data.len());
+        if start == data.len() {
+            &[]
+        } else {
+            &data[start..]
         }
     }
 }
 
-/// Wrap already-encoded payload bytes in an RLP list header.
-fn rlp_encode_list_payload(payload: &[u8]) -> Vec<u8> {
-    if payload.len() <= 55 {
-        let mut out = vec![0xc0 + payload.len() as u8];
-        out.extend_from_slice(payload);
-        out
-    } else {
-        let len_bytes = encode_length(payload.len());
-        let mut out = vec![0xf7 + len_bytes.len() as u8];
-        out.extend_from_slice(&len_bytes);
-        out.extend_from_slice(payload);
-        out
-    }
-}
+// Re-import for local use within this module.
+use rlp_helpers::{rlp_encode_list, trim_leading_zeros, RlpItem};
 
-/// Encode a flat list of items.
-fn rlp_encode_list(items: &[RlpItem]) -> Vec<u8> {
-    let payload: Vec<u8> = items.iter().flat_map(rlp_encode).collect();
-    rlp_encode_list_payload(&payload)
-}
-
-/// Big-endian encoding of `len` without leading zeros.
-fn encode_length(len: usize) -> Vec<u8> {
-    let bytes = (len as u64).to_be_bytes();
-    let start = bytes.iter().position(|&b| b != 0).unwrap_or(bytes.len());
-    bytes[start..].to_vec()
-}
-
-/// Strip leading zero bytes from a byte slice.
-fn trim_leading_zeros(data: &[u8]) -> &[u8] {
-    let start = data.iter().position(|&b| b != 0).unwrap_or(data.len());
-    if start == data.len() {
-        &[]
-    } else {
-        &data[start..]
-    }
-}
+// `rlp_encode` is used in tests below.
+#[cfg(test)]
+use rlp_helpers::rlp_encode;
 
 // ---------------------------------------------------------------------------
 // Tests

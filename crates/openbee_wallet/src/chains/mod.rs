@@ -1,4 +1,5 @@
 pub mod ethereum;
+pub mod evm;
 pub mod solana;
 
 use crate::security::SecretBytes;
@@ -79,12 +80,20 @@ impl ChainRegistry {
         self.chains.keys().map(|s| s.as_str()).collect()
     }
 
-    /// Create a registry pre-populated with all built-in chain backends
-    /// (Ethereum mainnet, Solana mainnet).
+    /// Create a registry pre-populated with all built-in chain backends.
+    ///
+    /// Includes: Ethereum, Solana, BSC, Polygon, Arbitrum, Optimism, Base,
+    /// Avalanche C-Chain.
     pub fn with_defaults() -> Self {
         let mut registry = Self::new();
         registry.register(Box::new(ethereum::EthereumChain::mainnet()));
         registry.register(Box::new(solana::SolanaChain::mainnet()));
+        registry.register(Box::new(evm::EvmChain::bsc()));
+        registry.register(Box::new(evm::EvmChain::polygon()));
+        registry.register(Box::new(evm::EvmChain::arbitrum()));
+        registry.register(Box::new(evm::EvmChain::optimism()));
+        registry.register(Box::new(evm::EvmChain::base()));
+        registry.register(Box::new(evm::EvmChain::avalanche()));
         registry
     }
 }
@@ -108,11 +117,29 @@ mod tests {
         let reg = ChainRegistry::with_defaults();
         assert!(reg.get("ethereum").is_some());
         assert!(reg.get("solana").is_some());
+        assert!(reg.get("bsc").is_some());
+        assert!(reg.get("polygon").is_some());
+        assert!(reg.get("arbitrum").is_some());
+        assert!(reg.get("optimism").is_some());
+        assert!(reg.get("base").is_some());
+        assert!(reg.get("avalanche").is_some());
         assert!(reg.get("bitcoin").is_none());
 
         let mut chains = reg.supported_chains();
         chains.sort();
-        assert_eq!(chains, vec!["ethereum", "solana"]);
+        assert_eq!(
+            chains,
+            vec![
+                "arbitrum",
+                "avalanche",
+                "base",
+                "bsc",
+                "ethereum",
+                "optimism",
+                "polygon",
+                "solana",
+            ]
+        );
     }
 
     #[test]

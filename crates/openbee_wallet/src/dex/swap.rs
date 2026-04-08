@@ -93,6 +93,91 @@ impl TokenInfo {
             decimals: 9,
         }
     }
+
+    // ----- BSC tokens -----
+
+    /// Native BNB on BSC.
+    pub fn bnb() -> Self {
+        Self {
+            symbol: "BNB".into(),
+            address: "native".into(),
+            decimals: 18,
+        }
+    }
+
+    /// Wrapped BNB (WBNB) on BSC mainnet.
+    pub fn wbnb() -> Self {
+        Self {
+            symbol: "WBNB".into(),
+            address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".into(),
+            decimals: 18,
+        }
+    }
+
+    /// USDC on BSC mainnet.
+    pub fn usdc_bsc() -> Self {
+        Self {
+            symbol: "USDC".into(),
+            address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d".into(),
+            decimals: 18,
+        }
+    }
+
+    /// USDT on BSC mainnet.
+    pub fn usdt_bsc() -> Self {
+        Self {
+            symbol: "USDT".into(),
+            address: "0x55d398326f99059fF775485246999027B3197955".into(),
+            decimals: 18,
+        }
+    }
+
+    /// BUSD on BSC mainnet.
+    pub fn busd() -> Self {
+        Self {
+            symbol: "BUSD".into(),
+            address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56".into(),
+            decimals: 18,
+        }
+    }
+
+    /// CAKE (PancakeSwap) token on BSC mainnet.
+    pub fn cake() -> Self {
+        Self {
+            symbol: "CAKE".into(),
+            address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82".into(),
+            decimals: 18,
+        }
+    }
+
+    // ----- Multi-chain tokens -----
+
+    /// Native MATIC on Polygon.
+    pub fn matic() -> Self {
+        Self {
+            symbol: "MATIC".into(),
+            address: "native".into(),
+            decimals: 18,
+        }
+    }
+
+    /// Native AVAX on Avalanche C-Chain.
+    pub fn avax() -> Self {
+        Self {
+            symbol: "AVAX".into(),
+            address: "native".into(),
+            decimals: 18,
+        }
+    }
+
+    /// ARB (Arbitrum) governance token on Arbitrum One.
+    pub fn arb() -> Self {
+        Self {
+            symbol: "ARB".into(),
+            address: "0x912CE59144191C1204E64559FE8253a0e49E6548".into(),
+            decimals: 18,
+        }
+    }
 }
 
 /// A price quote returned by a DEX backend before executing a swap.

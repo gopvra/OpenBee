@@ -454,7 +454,10 @@ fn derivation_path_for_chain(
     index: u32,
 ) -> Result<DerivationPath, WalletError> {
     match chain {
-        "ethereum" => Ok(DerivationPath::ethereum(account, index)),
+        // Ethereum and all EVM-compatible chains use BIP-44 coin type 60.
+        "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "base" | "avalanche" => {
+            Ok(DerivationPath::ethereum(account, index))
+        }
         "solana" => Ok(DerivationPath::solana(account, index)),
         other => Err(WalletError::UnsupportedChain(other.to_string())),
     }
