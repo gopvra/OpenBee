@@ -147,7 +147,7 @@ impl ModLoader {
             .loaded_mods
             .iter_mut()
             .find(|m| m.manifest.id == mod_id)
-            .unwrap();
+            .ok_or_else(|| anyhow::anyhow!("Mod '{mod_id}' not found"))?;
         entry.enabled = true;
         info!("Loaded mod '{}'", entry.manifest.name);
         Ok(())

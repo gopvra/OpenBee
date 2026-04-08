@@ -3,6 +3,9 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Maximum allowed size for speedrun save files (1 MB).
+const MAX_SAVE_SIZE: u64 = 1024 * 1024;
+
 /// A full-featured speedrun timer supporting splits, personal bests, and delta tracking.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SpeedrunTimer {
@@ -142,6 +145,7 @@ impl SpeedrunTimer {
     }
 
     /// Save the current best splits and personal best to a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn save_best(&mut self, path: &str) -> Result<(), std::io::Error> {
         #[derive(Serialize)]
         struct SaveData<'a> {
@@ -157,7 +161,18 @@ impl SpeedrunTimer {
     }
 
     /// Load best splits and personal best from a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn load_best(&mut self, path: &str) -> Result<(), std::io::Error> {
+        // Validate file size to prevent memory exhaustion attacks
+        let metadata = std::fs::metadata(path)?;
+        if metadata.len() > MAX_SAVE_SIZE {
+            return Err(std::io::Error::other(format!(
+                "File too large: {} bytes (max {})",
+                metadata.len(),
+                MAX_SAVE_SIZE
+            )));
+        }
+
         #[derive(Deserialize)]
         struct SaveData {
             best_splits: HashMap<String, u64>,

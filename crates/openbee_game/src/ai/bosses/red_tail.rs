@@ -162,9 +162,9 @@ impl RedTailBossAi {
             }
         }
 
-        if self.current_attack.is_some() {
+        if let Some(current_attack) = self.current_attack {
             self.attack_timer += dt;
-            let duration = match self.current_attack.unwrap() {
+            let duration = match current_attack {
                 RedTailAttack::DashSlash => 0.5,
                 RedTailAttack::BackflipKick => 0.7,
                 RedTailAttack::WallDive => 1.2,

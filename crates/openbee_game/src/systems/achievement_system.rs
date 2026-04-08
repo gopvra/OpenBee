@@ -7,6 +7,9 @@ use openbee_core::ecs::{System, World};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Maximum allowed size for achievement save files (10 MB).
+const MAX_SAVE_SIZE: u64 = 10 * 1024 * 1024;
+
 /// Defines a single achievement that the player can unlock.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AchievementDefinition {
@@ -612,13 +615,25 @@ impl AchievementSystem {
     }
 
     /// Persist achievement progress to a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
         let json = serde_json::to_string_pretty(&self.progress).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
     /// Load achievement progress from a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
+        // Validate file size to prevent memory exhaustion attacks
+        let metadata = std::fs::metadata(path)?;
+        if metadata.len() > MAX_SAVE_SIZE {
+            return Err(std::io::Error::other(format!(
+                "File too large: {} bytes (max {})",
+                metadata.len(),
+                MAX_SAVE_SIZE
+            )));
+        }
+
         let json = std::fs::read_to_string(path)?;
         let loaded: HashMap<String, AchievementProgress> =
             serde_json::from_str(&json).map_err(std::io::Error::other)?;

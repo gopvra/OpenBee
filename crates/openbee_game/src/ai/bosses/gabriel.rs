@@ -137,9 +137,9 @@ impl GabrielBossAi {
 
         self.teleport_cooldown = (self.teleport_cooldown - dt).max(0.0);
 
-        if self.current_attack.is_some() {
+        if let Some(current_attack) = self.current_attack {
             self.attack_timer += dt;
-            let duration = match self.current_attack.unwrap() {
+            let duration = match current_attack {
                 GabrielAttack::DiveBomb => 1.8,
                 GabrielAttack::MagicBolt => 0.6,
                 GabrielAttack::MagicSpread => 1.0,

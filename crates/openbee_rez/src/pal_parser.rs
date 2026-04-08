@@ -38,6 +38,7 @@ impl Palette {
 
     /// Get the RGB color at the given palette index.
     pub fn get_color(&self, index: u8) -> (u8, u8, u8) {
+        // SAFETY: index is u8 (0..255); colors array has 256 entries.
         let c = self.colors[index as usize];
         (c[0], c[1], c[2])
     }
@@ -50,6 +51,7 @@ impl Palette {
         if index == 0 {
             [0, 0, 0, 0]
         } else {
+            // SAFETY: index is u8 (0..255); colors array has 256 entries.
             let c = self.colors[index as usize];
             [c[0], c[1], c[2], 255]
         }

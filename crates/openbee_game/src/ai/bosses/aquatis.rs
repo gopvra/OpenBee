@@ -149,10 +149,10 @@ impl AquatisBossAi {
     pub fn update(&mut self, dt: f32, health_fraction: f32) {
         self.update_phase(health_fraction);
 
-        if self.current_attack.is_some() {
+        if let Some(current_attack) = self.current_attack {
             self.attack_timer += dt;
             // Attack duration depends on type
-            let duration = match self.current_attack.unwrap() {
+            let duration = match current_attack {
                 AquatisAttack::WaterJet => 1.5,
                 AquatisAttack::Geyser => 1.0,
                 AquatisAttack::SpawnMinions => 0.8,

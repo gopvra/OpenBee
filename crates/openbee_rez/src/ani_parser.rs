@@ -78,6 +78,7 @@ impl AniFile {
             return Err(AniError::TooManyFrames(num_frames));
         }
 
+        // SAFETY: num_frames is u32, bounded by MAX_ANI_FRAMES; always fits in usize.
         let mut frames = Vec::with_capacity(num_frames as usize);
 
         for _ in 0..num_frames {
@@ -86,7 +87,8 @@ impl AniFile {
             let offset_x = cursor.read_i32::<LittleEndian>()?;
             let offset_y = cursor.read_i32::<LittleEndian>()?;
 
-            let path_len = cursor.read_u32::<LittleEndian>()? as usize;
+            let path_len = usize::try_from(cursor.read_u32::<LittleEndian>()?)
+                .map_err(|_| AniError::PathTooLong(u32::MAX as usize))?;
             if path_len > MAX_ANI_PATH_LEN {
                 return Err(AniError::PathTooLong(path_len));
             }

@@ -161,7 +161,10 @@ impl MovementSystem {
 
             if let Some(target_pos) = target_pos {
                 let (speed, max_dist) = {
-                    let follow = world.get_component::<FollowableComponent>(entity).unwrap();
+                    // SAFETY: We confirmed this entity has a FollowableComponent above.
+                    let Some(follow) = world.get_component::<FollowableComponent>(entity) else {
+                        continue;
+                    };
                     (follow.speed, follow.max_distance)
                 };
                 if let Some(transform) = world.get_component_mut::<TransformComponent>(entity) {

@@ -146,9 +146,9 @@ impl MarrowBossAi {
             }
         }
 
-        if self.current_attack.is_some() {
+        if let Some(current_attack) = self.current_attack {
             self.attack_timer += dt;
-            let duration = match self.current_attack.unwrap() {
+            let duration = match current_attack {
                 MarrowAttack::Slash => 0.6,
                 MarrowAttack::Overhead => 0.8,
                 MarrowAttack::Combo => 1.5,

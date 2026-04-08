@@ -50,6 +50,7 @@ impl SaveData {
 }
 
 /// Save the game state to a JSON file at the given path.
+// NOTE: Caller is responsible for sandbox validation
 pub fn save_game(data: &SaveData, path: &Path) -> Result<()> {
     sanitize_path(path)?;
     info!("Saving game to {:?}", path);
@@ -60,6 +61,7 @@ pub fn save_game(data: &SaveData, path: &Path) -> Result<()> {
 }
 
 /// Load a game state from a JSON file at the given path.
+// NOTE: Caller is responsible for sandbox validation
 pub fn load_game(path: &Path) -> Result<SaveData> {
     sanitize_path(path)?;
     // Check file size before reading to prevent DoS.
@@ -88,6 +90,7 @@ pub fn load_game(path: &Path) -> Result<SaveData> {
 }
 
 /// List all save files in the given directory, sorted by modification time.
+// NOTE: Caller is responsible for sandbox validation
 pub fn list_saves(directory: &Path) -> Result<Vec<std::path::PathBuf>> {
     let mut saves: Vec<_> = std::fs::read_dir(directory)
         .context("Failed to read saves directory")?
@@ -100,6 +103,7 @@ pub fn list_saves(directory: &Path) -> Result<Vec<std::path::PathBuf>> {
 }
 
 /// Delete a save file.
+// NOTE: Caller is responsible for sandbox validation
 pub fn delete_save(path: &Path) -> Result<()> {
     sanitize_path(path)?;
     std::fs::remove_file(path).context("Failed to delete save file")?;
