@@ -4,6 +4,7 @@ pub mod actor_node;
 pub mod camera_effects;
 pub mod hud_node;
 pub mod node;
+#[allow(clippy::module_inception)]
 pub mod scene;
 pub mod tile_node;
 

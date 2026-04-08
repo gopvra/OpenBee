@@ -7,17 +7,12 @@ use tracing::info;
 use crate::game_logic::GameLogic;
 
 /// Difficulty settings affecting enemy health, damage, and pickup rates.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Difficulty {
     Easy,
+    #[default]
     Normal,
     Hard,
-}
-
-impl Default for Difficulty {
-    fn default() -> Self {
-        Self::Normal
-    }
 }
 
 /// Game configuration loaded from settings file or command-line arguments.

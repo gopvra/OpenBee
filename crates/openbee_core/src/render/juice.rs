@@ -358,7 +358,7 @@ impl JuiceManager {
     pub fn is_frozen(&self) -> bool {
         self.hit_freeze
             .as_ref()
-            .map_or(false, |f| f.remaining_frames > 0 && f.time_scale == 0.0)
+            .is_some_and(|f| f.remaining_frames > 0 && f.time_scale == 0.0)
     }
 
     /// Compute the effective delta time after applying all active juice effects.

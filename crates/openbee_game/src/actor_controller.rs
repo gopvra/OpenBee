@@ -110,7 +110,7 @@ impl ActorController {
         // Check if the player can be controlled
         let can_control = world
             .get_component::<ControllableComponent>(entity)
-            .map_or(false, |c| c.is_active && c.can_move);
+            .is_some_and(|c| c.is_active && c.can_move);
 
         if !can_control {
             return;
@@ -119,7 +119,7 @@ impl ActorController {
         // Update coyote time and jump buffer
         let on_ground = world
             .get_component::<KinematicComponent>(entity)
-            .map_or(false, |k| k.on_ground);
+            .is_some_and(|k| k.on_ground);
 
         if on_ground {
             self.coyote_timer = self.constants.coyote_time;
@@ -149,7 +149,7 @@ impl ActorController {
         // Read can_jump before taking the mutable borrow on kinematic.
         let can_jump = world
             .get_component::<ControllableComponent>(entity)
-            .map_or(false, |c| c.can_jump);
+            .is_some_and(|c| c.can_jump);
 
         if let Some(kinematic) = world.get_component_mut::<KinematicComponent>(entity) {
             kinematic.velocity.x = move_x;
@@ -171,7 +171,7 @@ impl ActorController {
         if self.input_state.attack_pressed {
             let can_attack = world
                 .get_component::<ControllableComponent>(entity)
-                .map_or(false, |c| c.can_attack);
+                .is_some_and(|c| c.can_attack);
             if can_attack {
                 // Attack initiated - combat system handles the rest
             }

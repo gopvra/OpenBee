@@ -92,7 +92,7 @@ impl System for WaterSystem {
             // Write swimming state.
             let was_submerged = world
                 .get_component::<SwimmingComponent>(entity)
-                .map_or(false, |s| s.is_submerged);
+                .is_some_and(|s| s.is_submerged);
 
             if let Some(swim) = world.get_component_mut::<SwimmingComponent>(entity) {
                 let entering = in_any_zone && !was_submerged;

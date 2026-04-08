@@ -42,7 +42,7 @@ impl AdvancedMovementSystem {
     fn update_wall_jump(world: &mut World, entity: openbee_core::ecs::Entity, dt: f32) {
         let on_ground = world
             .get_component::<KinematicComponent>(entity)
-            .map_or(false, |k| k.on_ground);
+            .is_some_and(|k| k.on_ground);
 
         let wall_jump = match world.get_component_mut::<WallJumpComponent>(entity) {
             Some(wj) if wj.enabled => wj,
@@ -72,7 +72,7 @@ impl AdvancedMovementSystem {
     fn update_double_jump(world: &mut World, entity: openbee_core::ecs::Entity, dt: f32) {
         let on_ground = world
             .get_component::<KinematicComponent>(entity)
-            .map_or(false, |k| k.on_ground);
+            .is_some_and(|k| k.on_ground);
 
         let _ = dt; // not used directly; reset is frame-based.
 
@@ -159,11 +159,7 @@ impl AdvancedMovementSystem {
         };
 
         // Only slide when falling fast enough.
-        if fall_speed > ws.min_fall_speed_to_slide {
-            ws.is_sliding = true;
-        } else {
-            ws.is_sliding = false;
-        }
+        ws.is_sliding = fall_speed > ws.min_fall_speed_to_slide;
 
         // Cap downward velocity to slide speed.
         if ws.is_sliding {
@@ -207,7 +203,7 @@ impl AdvancedMovementSystem {
     fn update_glide(world: &mut World, entity: openbee_core::ecs::Entity, dt: f32) {
         let on_ground = world
             .get_component::<KinematicComponent>(entity)
-            .map_or(false, |k| k.on_ground);
+            .is_some_and(|k| k.on_ground);
 
         let (is_gliding, gravity_scale) = {
             let glide = match world.get_component_mut::<GlideComponent>(entity) {

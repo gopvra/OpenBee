@@ -138,10 +138,10 @@ impl HotReloadWatcher {
                     }
                 }
 
-                if !self.watched_files.contains_key(&path) {
-                    if let Ok(meta) = std::fs::metadata(&path) {
+                if let std::collections::hash_map::Entry::Vacant(e) = self.watched_files.entry(path) {
+                    if let Ok(meta) = std::fs::metadata(e.key()) {
                         if let Ok(modified) = meta.modified() {
-                            self.watched_files.insert(path, modified);
+                            e.insert(modified);
                         }
                     }
                 }
@@ -197,6 +197,7 @@ impl ReloadableType {
 /// Hot reload manager that owns a watcher and dispatches reload events.
 pub struct HotReloadManager {
     pub watcher: HotReloadWatcher,
+    #[allow(clippy::type_complexity)]
     pub reload_callbacks: HashMap<String, Vec<Box<dyn Fn(&Path) + Send>>>,
     pub reload_count: u64,
     pub last_reload_path: Option<PathBuf>,

@@ -16,6 +16,12 @@ pub struct PhysicsSystem {
     gravity: Vec2,
 }
 
+impl Default for PhysicsSystem {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PhysicsSystem {
     pub fn new() -> Self {
         Self {
@@ -36,7 +42,7 @@ impl System for PhysicsSystem {
             // Apply gravity and kinematic movement for entities without physics bodies
             let has_physics_body = world
                 .get_component::<PhysicsComponent>(entity)
-                .map_or(false, |p| p.body_handle.is_some());
+                .is_some_and(|p| p.body_handle.is_some());
 
             if !has_physics_body {
                 // Manual kinematic integration

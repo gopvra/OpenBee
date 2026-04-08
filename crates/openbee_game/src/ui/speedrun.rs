@@ -152,7 +152,7 @@ impl SpeedrunTimer {
             personal_best: self.personal_best,
         };
         let json = serde_json::to_string_pretty(&data)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
@@ -165,7 +165,7 @@ impl SpeedrunTimer {
         }
         let json = std::fs::read_to_string(path)?;
         let data: SaveData = serde_json::from_str(&json)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         self.best_splits = data.best_splits;
         self.personal_best = data.personal_best;
 

@@ -23,6 +23,7 @@ impl GameHud {
     }
 
     /// Draw the HUD overlay.
+    #[allow(clippy::too_many_arguments)]
     pub fn draw(
         &self,
         renderer: &mut dyn Renderer,

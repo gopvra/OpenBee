@@ -64,13 +64,11 @@ fn parse_launch_mode(args: &[String]) -> LaunchMode {
         }
         "--help" | "-h" => LaunchMode::Help,
         "--fullscreen" | "-f" => {
-            let mut config = GameConfig::default();
-            config.fullscreen = true;
+            let config = GameConfig { fullscreen: true, ..Default::default() };
             LaunchMode::Game(config)
         }
         "--windowed" | "-w" => {
-            let mut config = GameConfig::default();
-            config.fullscreen = false;
+            let config = GameConfig { fullscreen: false, ..Default::default() };
             LaunchMode::Game(config)
         }
         "--difficulty" | "-d" => {

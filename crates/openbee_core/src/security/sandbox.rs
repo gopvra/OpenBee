@@ -5,7 +5,6 @@
 //! path stays within the allowed directory set. This prevents path traversal attacks
 //! and guarantees users' personal files are never touched.
 
-use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 

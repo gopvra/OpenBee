@@ -111,7 +111,7 @@ impl DebugConsole {
 
     /// Execute a console command and return the result message.
     pub fn execute_command(&mut self, command: &str) -> String {
-        let parts: Vec<&str> = command.trim().split_whitespace().collect();
+        let parts: Vec<&str> = command.split_whitespace().collect();
         if parts.is_empty() {
             return String::new();
         }

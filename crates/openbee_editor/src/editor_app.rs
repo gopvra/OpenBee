@@ -151,8 +151,9 @@ pub struct EditorAction {
 // ---------------------------------------------------------------------------
 
 /// Which tool is currently active in the editor.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EditorTool {
+    #[default]
     Select,
     TileBrush,
     TileEraser,
@@ -162,25 +163,14 @@ pub enum EditorTool {
     Resize,
 }
 
-impl Default for EditorTool {
-    fn default() -> Self {
-        Self::Select
-    }
-}
-
 /// High-level editor mode.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EditorState {
+    #[default]
     Idle,
     Editing,
     Testing,
     Saving,
-}
-
-impl Default for EditorState {
-    fn default() -> Self {
-        Self::Idle
-    }
 }
 
 // ---------------------------------------------------------------------------

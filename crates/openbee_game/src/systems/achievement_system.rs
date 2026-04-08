@@ -114,6 +114,12 @@ pub struct AchievementSystem {
     pub notification_timer: f32,
 }
 
+impl Default for AchievementSystem {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AchievementSystem {
     /// Create a new system with the default Captain Claw achievement set.
     pub fn new() -> Self {
@@ -593,7 +599,7 @@ impl AchievementSystem {
     /// Persist achievement progress to a JSON file.
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
         let json = serde_json::to_string_pretty(&self.progress)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
@@ -601,7 +607,7 @@ impl AchievementSystem {
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
         let json = std::fs::read_to_string(path)?;
         let loaded: HashMap<String, AchievementProgress> = serde_json::from_str(&json)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         // Merge loaded progress with existing definitions
         for (id, prog) in loaded {
             if self.progress.contains_key(&id) {

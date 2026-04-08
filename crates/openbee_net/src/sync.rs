@@ -69,7 +69,7 @@ impl ClientPrediction {
         while self
             .pending
             .front()
-            .map_or(false, |p| p.tick <= server_tick)
+            .is_some_and(|p| p.tick <= server_tick)
         {
             self.pending.pop_front();
         }
@@ -134,7 +134,7 @@ impl EntityInterpolator {
         let buf = self
             .buffers
             .entry(snapshot.entity_id)
-            .or_insert_with(VecDeque::new);
+            .or_default();
         buf.push_back(InterpolationEntry {
             tick: 0, // caller should set the tick
             x: snapshot.x,
@@ -152,7 +152,7 @@ impl EntityInterpolator {
         let buf = self
             .buffers
             .entry(snapshot.entity_id)
-            .or_insert_with(VecDeque::new);
+            .or_default();
         buf.push_back(InterpolationEntry {
             tick,
             x: snapshot.x,

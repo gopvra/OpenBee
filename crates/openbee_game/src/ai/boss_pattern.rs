@@ -175,7 +175,7 @@ pub struct BossPatternExecutor {
     /// Steps currently being executed (top-level or from a pattern).
     active_steps: Vec<PatternStep>,
     /// Whether we have already played the intro pattern.
-    intro_done: bool,
+    _intro_done: bool,
     /// Whether the phase-enter pattern has been played for the current phase.
     phase_enter_done: bool,
 }
@@ -196,7 +196,7 @@ impl BossPatternExecutor {
             repeat_stack: Vec::new(),
             exec_stack: Vec::new(),
             active_steps: intro,
-            intro_done: !has_intro,
+            _intro_done: !has_intro,
             phase_enter_done: false,
         }
     }

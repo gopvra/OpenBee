@@ -94,7 +94,7 @@ pub fn list_saves(directory: &Path) -> Result<Vec<std::path::PathBuf>> {
         .context("Failed to read saves directory")?
         .filter_map(|entry| entry.ok())
         .filter(|entry| {
-            entry.path().extension().map_or(false, |ext| ext == "json")
+            entry.path().extension().is_some_and(|ext| ext == "json")
         })
         .map(|entry| entry.path())
         .collect();

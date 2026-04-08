@@ -23,7 +23,7 @@ impl System for RenderSystem {
         for entity in entities {
             let visible = world
                 .get_component::<RenderComponent>(entity)
-                .map_or(false, |r| r.visible);
+                .is_some_and(|r| r.visible);
 
             if !visible {
                 continue;
