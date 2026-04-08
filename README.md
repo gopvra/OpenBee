@@ -359,7 +359,7 @@ This project draws ideas from many open-source projects:
 
 | Project | What We Borrowed |
 |---------|-----------------|
-| [OpenClaw](https://github.com/pjasicek/OpenClaw) | 1:1 game mechanics, component architecture, all 14 levels |
+| [OpenClaw](https://github.com/pjasicek/OpenClaw) | game mechanics, component architecture, all 14 levels |
 | [Bevy](https://bevyengine.org/) | ECS design, hot reload, debug inspector, tween engine |
 | [Corgi Engine](https://corgi-engine.moremountains.com/) | Advanced movement, inventory, dialogue, camera rooms |
 | [OpenSurge](https://opensurge2d.org/) | Scripting engine, boss pattern DSL |
