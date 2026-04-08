@@ -109,6 +109,7 @@ impl ApprovalManager {
     ///
     /// The amount is calculated as `swap_amount + safety_margin` (1%).
     /// This function **never** creates unlimited approvals.
+    #[allow(clippy::too_many_arguments)]
     pub fn request_approval(
         &mut self,
         token_address: &str,

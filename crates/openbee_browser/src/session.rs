@@ -53,6 +53,6 @@ impl SessionManager {
 
     /// Returns `true` if there is an active, connected session.
     pub fn is_connected(&self) -> bool {
-        self.active_session.as_ref().map_or(false, |s| s.connected)
+        self.active_session.as_ref().is_some_and(|s| s.connected)
     }
 }

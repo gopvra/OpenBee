@@ -6,20 +6,15 @@
 use tracing::{error, warn};
 
 /// Safety acknowledgement state.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum WalletSafetyState {
     /// Wallet feature is completely disabled (default).
+    #[default]
     Disabled,
     /// User has been shown the warning but hasn't accepted yet.
     WarningShown,
     /// User has accepted the risks and enabled the wallet.
     Accepted,
-}
-
-impl Default for WalletSafetyState {
-    fn default() -> Self {
-        Self::Disabled
-    }
 }
 
 /// The full safety warning text shown to the user before enabling the wallet.

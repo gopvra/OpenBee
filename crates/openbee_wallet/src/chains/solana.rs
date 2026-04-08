@@ -228,15 +228,12 @@ fn build_transfer_message(
     lamports: u128,
     nonce: u64,
 ) -> Vec<u8> {
-    let mut msg = Vec::new();
-
-    // ---- Header ----
-    msg.push(1); // num_required_signatures
-    msg.push(0); // num_readonly_signed_accounts
-    msg.push(1); // num_readonly_unsigned_accounts (system program)
-
-    // ---- Account addresses (compact-u16 count = 3) ----
-    msg.push(3);
+    let mut msg = vec![
+        1u8, // num_required_signatures
+        0,   // num_readonly_signed_accounts
+        1,   // num_readonly_unsigned_accounts (system program)
+        3,   // compact-u16 account count
+    ];
     msg.extend_from_slice(from_pubkey); // index 0: signer + writable
     msg.extend_from_slice(to_pubkey); // index 1: writable
     msg.extend_from_slice(&SYSTEM_PROGRAM); // index 2: readonly

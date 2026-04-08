@@ -82,6 +82,7 @@ fn encode_uint24(value: u32) -> [u8; 32] {
 /// - `amountIn`: exact input amount
 /// - `amountOutMinimum`: minimum acceptable output (slippage protection)
 /// - `sqrtPriceLimitX96`: price limit (0 = no limit)
+#[allow(clippy::too_many_arguments)]
 fn build_exact_input_single_calldata(
     token_in: &str,
     token_out: &str,

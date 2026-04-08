@@ -74,7 +74,7 @@ pub fn bind_password_to_machine(password: &str) -> Vec<u8> {
     let fingerprint = machine_fingerprint();
     let mut hasher = Sha256::new();
     hasher.update(password.as_bytes());
-    hasher.update(&fingerprint);
+    hasher.update(fingerprint);
     hasher.update(b"openbee-password-binding-v1");
     hasher.finalize().to_vec()
 }
