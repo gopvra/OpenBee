@@ -17,7 +17,7 @@ use sha2::{Digest, Sha256};
 use tracing::warn;
 
 /// Maximum consecutive failed unlock attempts before the keystore is wiped.
-pub const MAX_FAILED_ATTEMPTS: u32 = 10;
+pub const MAX_FAILED_ATTEMPTS: u32 = 5;
 
 /// Collect a machine fingerprint that changes if the keystore file is moved
 /// to a different computer.
