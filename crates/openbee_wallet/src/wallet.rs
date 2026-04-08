@@ -454,7 +454,10 @@ fn derivation_path_for_chain(
     index: u32,
 ) -> Result<DerivationPath, WalletError> {
     match chain {
-        "ethereum" => Ok(DerivationPath::ethereum(account, index)),
+        // Ethereum and all EVM-compatible chains use BIP-44 coin type 60.
+        "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "base" | "avalanche" => {
+            Ok(DerivationPath::ethereum(account, index))
+        }
         "solana" => Ok(DerivationPath::solana(account, index)),
         other => Err(WalletError::UnsupportedChain(other.to_string())),
     }
@@ -530,11 +533,19 @@ mod tests {
         assert_eq!(wallet.name, "test");
         assert!(!wallet.accounts.is_empty());
 
-        // Should have accounts for both chains
+        // Should have accounts for all default chains
         let eth_accounts = wallet.accounts_for_chain("ethereum");
         let sol_accounts = wallet.accounts_for_chain("solana");
         assert_eq!(eth_accounts.len(), 1);
         assert_eq!(sol_accounts.len(), 1);
+
+        // EVM L2 chains should also have accounts
+        assert_eq!(wallet.accounts_for_chain("bsc").len(), 1);
+        assert_eq!(wallet.accounts_for_chain("polygon").len(), 1);
+        assert_eq!(wallet.accounts_for_chain("arbitrum").len(), 1);
+        assert_eq!(wallet.accounts_for_chain("optimism").len(), 1);
+        assert_eq!(wallet.accounts_for_chain("base").len(), 1);
+        assert_eq!(wallet.accounts_for_chain("avalanche").len(), 1);
 
         // Addresses should be valid
         let eth_addr = &eth_accounts[0].address;
@@ -547,7 +558,8 @@ mod tests {
         let wallet2 = Wallet::open(&dir).unwrap();
         assert!(wallet2.is_locked());
         assert_eq!(wallet2.name, "test");
-        assert_eq!(wallet2.accounts.len(), 2);
+        // 8 chains: ethereum, solana, bsc, polygon, arbitrum, optimism, base, avalanche
+        assert_eq!(wallet2.accounts.len(), 8);
 
         // Clean up
         let _ = std::fs::remove_dir_all(&dir);

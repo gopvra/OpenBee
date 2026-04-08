@@ -9,6 +9,7 @@ members = [
     "crates/openbee_net",
     "crates/openbee_mod",
     "crates/openbee_wallet",
+    "crates/openbee_browser",
 ]
 
 [workspace.package]
@@ -47,6 +48,8 @@ openbee_scripting = { path = "crates/openbee_scripting" }
 openbee_editor = { path = "crates/openbee_editor" }
 openbee_net = { path = "crates/openbee_net" }
 openbee_mod = { path = "crates/openbee_mod" }
+openbee_wallet = { path = "crates/openbee_wallet" }
+openbee_browser = { path = "crates/openbee_browser" }
 
 [package]
 name = "openbee"
@@ -62,6 +65,8 @@ openbee_scripting = { workspace = true }
 openbee_editor = { workspace = true }
 openbee_net = { workspace = true }
 openbee_mod = { workspace = true }
+openbee_wallet = { workspace = true }
+openbee_browser = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }

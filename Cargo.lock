@@ -1845,6 +1845,7 @@ name = "openbee"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "openbee_browser",
  "openbee_core",
  "openbee_editor",
  "openbee_game",
@@ -1852,9 +1853,22 @@ dependencies = [
  "openbee_net",
  "openbee_rez",
  "openbee_scripting",
+ "openbee_wallet",
  "tokio",
  "tracing",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "openbee_browser"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

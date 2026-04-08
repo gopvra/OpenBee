@@ -1,5 +1,4 @@
 use k256::ecdsa::SigningKey;
-use k256::elliptic_curve::sec1::ToEncodedPoint;
 use sha3::{Digest, Keccak256};
 
 // ---------------------------------------------------------------------------

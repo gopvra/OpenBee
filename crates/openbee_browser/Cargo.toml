@@ -1,0 +1,14 @@
+[package]
+name = "openbee_browser"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Browser automation for reading AI web content — non-API AI integration"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
