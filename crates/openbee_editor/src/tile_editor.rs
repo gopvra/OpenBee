@@ -58,12 +58,7 @@ pub fn erase_tile(app: &mut EditorApp, layer_index: usize, x: u32, y: u32, times
 
 /// Flood-fill starting from `(sx, sy)` replacing tiles that match the target
 /// with the currently selected tile ID. Uses a simple BFS.
-pub fn flood_fill(
-    layer: &mut TileLayer,
-    sx: u32,
-    sy: u32,
-    fill_id: u32,
-) -> Vec<(u32, u32, u32)> {
+pub fn flood_fill(layer: &mut TileLayer, sx: u32, sy: u32, fill_id: u32) -> Vec<(u32, u32, u32)> {
     let target = match layer.get(sx, sy) {
         Some(t) => t,
         None => return Vec::new(),

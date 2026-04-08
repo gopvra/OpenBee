@@ -184,10 +184,9 @@ impl PhysicsWorld {
             BodyShape::Capsule {
                 half_height,
                 radius,
-            } => SharedShape::capsule_y(
-                *half_height / PIXELS_PER_METER,
-                *radius / PIXELS_PER_METER,
-            ),
+            } => {
+                SharedShape::capsule_y(*half_height / PIXELS_PER_METER, *radius / PIXELS_PER_METER)
+            }
         };
 
         let collider = ColliderBuilder::new(shape)

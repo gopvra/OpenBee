@@ -35,7 +35,12 @@ impl System for PickupSystem {
         }
 
         // Collect pickups to process
-        let mut pickups_collected: Vec<(openbee_core::ecs::Entity, openbee_core::ecs::Entity, PickupType, i32)> = Vec::new();
+        let mut pickups_collected: Vec<(
+            openbee_core::ecs::Entity,
+            openbee_core::ecs::Entity,
+            PickupType,
+            i32,
+        )> = Vec::new();
 
         for &entity in &entities {
             if let (Some(transform), Some(collision), Some(pickup)) = (
@@ -78,7 +83,8 @@ impl System for PickupSystem {
                     }
                 }
                 PickupType::Health => {
-                    if let Some(health) = world.get_component_mut::<HealthComponent>(player_entity) {
+                    if let Some(health) = world.get_component_mut::<HealthComponent>(player_entity)
+                    {
                         health.heal(value);
                     }
                 }

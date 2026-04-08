@@ -66,11 +66,7 @@ impl ClientPrediction {
         self.confirmed_y = server_y;
 
         // Drop acknowledged inputs.
-        while self
-            .pending
-            .front()
-            .is_some_and(|p| p.tick <= server_tick)
-        {
+        while self.pending.front().is_some_and(|p| p.tick <= server_tick) {
             self.pending.pop_front();
         }
 
@@ -131,10 +127,7 @@ impl EntityInterpolator {
 
     /// Feed a new authoritative snapshot into the buffer.
     pub fn push_snapshot(&mut self, snapshot: &EntitySnapshot) {
-        let buf = self
-            .buffers
-            .entry(snapshot.entity_id)
-            .or_default();
+        let buf = self.buffers.entry(snapshot.entity_id).or_default();
         buf.push_back(InterpolationEntry {
             tick: 0, // caller should set the tick
             x: snapshot.x,
@@ -149,10 +142,7 @@ impl EntityInterpolator {
 
     /// Push a snapshot with an explicit tick.
     pub fn push_snapshot_with_tick(&mut self, tick: u64, snapshot: &EntitySnapshot) {
-        let buf = self
-            .buffers
-            .entry(snapshot.entity_id)
-            .or_default();
+        let buf = self.buffers.entry(snapshot.entity_id).or_default();
         buf.push_back(InterpolationEntry {
             tick,
             x: snapshot.x,

@@ -3,6 +3,9 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Maximum allowed size for speedrun save files (1 MB).
+const MAX_SAVE_SIZE: u64 = 1024 * 1024;
+
 /// A full-featured speedrun timer supporting splits, personal bests, and delta tracking.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SpeedrunTimer {
@@ -106,7 +109,8 @@ impl SpeedrunTimer {
             None => true,
         };
         if is_new_best {
-            self.best_splits.insert(name.to_string(), self.total_time_ms);
+            self.best_splits
+                .insert(name.to_string(), self.total_time_ms);
         }
 
         self.current_split += 1;
@@ -141,6 +145,7 @@ impl SpeedrunTimer {
     }
 
     /// Save the current best splits and personal best to a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn save_best(&mut self, path: &str) -> Result<(), std::io::Error> {
         #[derive(Serialize)]
         struct SaveData<'a> {
@@ -151,21 +156,30 @@ impl SpeedrunTimer {
             best_splits: &self.best_splits,
             personal_best: self.personal_best,
         };
-        let json = serde_json::to_string_pretty(&data)
-            .map_err(std::io::Error::other)?;
+        let json = serde_json::to_string_pretty(&data).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
     /// Load best splits and personal best from a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn load_best(&mut self, path: &str) -> Result<(), std::io::Error> {
+        // Validate file size to prevent memory exhaustion attacks
+        let metadata = std::fs::metadata(path)?;
+        if metadata.len() > MAX_SAVE_SIZE {
+            return Err(std::io::Error::other(format!(
+                "File too large: {} bytes (max {})",
+                metadata.len(),
+                MAX_SAVE_SIZE
+            )));
+        }
+
         #[derive(Deserialize)]
         struct SaveData {
             best_splits: HashMap<String, u64>,
             personal_best: Option<u64>,
         }
         let json = std::fs::read_to_string(path)?;
-        let data: SaveData = serde_json::from_str(&json)
-            .map_err(std::io::Error::other)?;
+        let data: SaveData = serde_json::from_str(&json).map_err(std::io::Error::other)?;
         self.best_splits = data.best_splits;
         self.personal_best = data.personal_best;
 
@@ -200,7 +214,8 @@ impl SpeedrunTimer {
         result.push((
             "Total".to_string(),
             Self::format_time(self.total_time_ms),
-            self.personal_best.map(|pb| self.total_time_ms as i64 - pb as i64),
+            self.personal_best
+                .map(|pb| self.total_time_ms as i64 - pb as i64),
         ));
         result
     }

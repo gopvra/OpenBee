@@ -548,7 +548,9 @@ pub fn is_player_in_range(range: f32) -> ConditionNode {
             // embeds the range in a static. The pragmatic approach: always
             // compare distance_to_player against the value stored in the
             // blackboard key "__condition_range".
-            |ctx: &BtContext| -> bool { ctx.distance_to_player <= range_from_name(ctx, "IsPlayerInRange") }
+            |ctx: &BtContext| -> bool {
+                ctx.distance_to_player <= range_from_name(ctx, "IsPlayerInRange")
+            }
         },
     }
 }

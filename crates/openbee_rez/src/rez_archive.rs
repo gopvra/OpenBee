@@ -68,6 +68,9 @@ pub enum RezError {
         archive_len: usize,
     },
 
+    #[error("invalid offset or size for entry: {0}")]
+    InvalidOffset(String),
+
     #[error("invalid UTF-8 in entry name")]
     InvalidName,
 
@@ -123,16 +126,20 @@ impl RezArchive {
 
         let mut cursor = Cursor::new(&data[4..12]);
         let _version = cursor.read_u32::<LittleEndian>()?;
-        let dir_offset = cursor.read_u32::<LittleEndian>()? as usize;
+        let dir_offset_raw = cursor.read_u32::<LittleEndian>()?;
+        let dir_offset =
+            usize::try_from(dir_offset_raw).map_err(|_| RezError::DirectoryOutOfBounds {
+                offset: dir_offset_raw as usize,
+            })?;
 
         // Read root directory size from header
         let mut size_cursor = Cursor::new(&data[12..16]);
-        let dir_size = size_cursor.read_u32::<LittleEndian>()? as usize;
+        let dir_size_raw = size_cursor.read_u32::<LittleEndian>()?;
+        let dir_size = usize::try_from(dir_size_raw)
+            .map_err(|_| RezError::DirectoryOutOfBounds { offset: dir_offset })?;
 
         if dir_offset + dir_size > data.len() {
-            return Err(RezError::DirectoryOutOfBounds {
-                offset: dir_offset,
-            });
+            return Err(RezError::DirectoryOutOfBounds { offset: dir_offset });
         }
 
         let mut entries = HashMap::new();
@@ -180,8 +187,7 @@ impl RezArchive {
             }
 
             let name_bytes = &data[name_start..pos];
-            let name =
-                std::str::from_utf8(name_bytes).map_err(|_| RezError::InvalidName)?;
+            let name = std::str::from_utf8(name_bytes).map_err(|_| RezError::InvalidName)?;
             pos += 1; // skip null terminator
 
             let full_path = if prefix.is_empty() {
@@ -208,10 +214,14 @@ impl RezArchive {
                     );
                 }
                 ENTRY_TYPE_DIR => {
+                    let child_offset = usize::try_from(entry_offset)
+                        .map_err(|_| RezError::InvalidOffset(full_path.clone()))?;
+                    let child_size = usize::try_from(entry_size)
+                        .map_err(|_| RezError::InvalidOffset(full_path.clone()))?;
                     Self::parse_directory(
                         data,
-                        entry_offset as usize,
-                        entry_size as usize,
+                        child_offset,
+                        child_size,
                         &full_path,
                         entries,
                         depth + 1,
@@ -294,15 +304,16 @@ impl RezArchive {
             .get(&normalized)
             .ok_or_else(|| RezError::FileNotFound(path.to_string()))?;
 
-        let start = entry.offset as usize;
-        let end = start + entry.size as usize;
+        let start = usize::try_from(entry.offset)
+            .map_err(|_| RezError::InvalidOffset(entry.path.clone()))?;
+        let size =
+            usize::try_from(entry.size).map_err(|_| RezError::InvalidOffset(entry.path.clone()))?;
+        let end = start
+            .checked_add(size)
+            .ok_or_else(|| RezError::InvalidOffset(entry.path.clone()))?;
 
         if end > self.data.len() {
-            return Err(RezError::DataOutOfBounds {
-                offset: entry.offset,
-                size: entry.size,
-                archive_len: self.data.len(),
-            });
+            return Err(RezError::InvalidOffset(entry.path.clone()));
         }
 
         Ok(self.data[start..end].to_vec())

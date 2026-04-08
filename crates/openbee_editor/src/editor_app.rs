@@ -255,12 +255,7 @@ impl EditorApp {
                         layer.set(*x, *y, new.unwrap_or(0));
                     }
                 }
-                ActionType::PlaceActor {
-                    id,
-                    template,
-                    x,
-                    y,
-                } => {
+                ActionType::PlaceActor { id, template, x, y } => {
                     doc.level_data.actors.push(ActorInstance {
                         id: *id,
                         template: template.clone(),
@@ -318,8 +313,7 @@ impl EditorApp {
                         tracing::warn!("Undo DeleteActor({id}) — actor data not fully restored");
                     }
                     ActionType::MoveActor { id, old_pos, .. } => {
-                        if let Some(actor) =
-                            doc.level_data.actors.iter_mut().find(|a| a.id == *id)
+                        if let Some(actor) = doc.level_data.actors.iter_mut().find(|a| a.id == *id)
                         {
                             actor.x = old_pos.0;
                             actor.y = old_pos.1;

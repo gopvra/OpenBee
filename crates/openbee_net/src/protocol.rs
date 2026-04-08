@@ -31,10 +31,7 @@ pub enum NetworkMessage {
     /// Broadcast of current lobby state.
     LobbyUpdate { players: Vec<PlayerInfo> },
     /// Chat message in the lobby or in-game.
-    ChatMessage {
-        sender: ClientId,
-        message: String,
-    },
+    ChatMessage { sender: ClientId, message: String },
     /// Host signals the game to start.
     StartGame,
 
@@ -66,10 +63,7 @@ pub enum NetworkMessage {
 
     // -- Events --------------------------------------------------------------
     /// Generic game event forwarded over the wire.
-    GameEvent {
-        event_type: String,
-        data: String,
-    },
+    GameEvent { event_type: String, data: String },
 }
 
 /// Information about the server, sent in [`NetworkMessage::ConnectAck`].

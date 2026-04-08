@@ -17,7 +17,12 @@ pub enum CutsceneAction {
 
     // Actors
     /// Move an actor entity to a position at a given speed.
-    MoveActor { entity_id: u64, x: f32, y: f32, speed: f32 },
+    MoveActor {
+        entity_id: u64,
+        x: f32,
+        y: f32,
+        speed: f32,
+    },
     /// Play a named animation on an actor entity.
     PlayAnimation { entity_id: u64, animation: String },
     /// Spawn a new actor from a template at a position.
@@ -31,7 +36,12 @@ pub enum CutsceneAction {
     /// Fade out to a color over a duration.
     FadeOut { duration: f32, color: [u8; 4] },
     /// Show an image overlay at a position for a duration.
-    ShowImage { path: String, x: f32, y: f32, duration: f32 },
+    ShowImage {
+        path: String,
+        x: f32,
+        y: f32,
+        duration: f32,
+    },
     /// Set letterbox bars (0.0 = none, 1.0 = full).
     SetLetterbox { amount: f32 },
 
@@ -45,7 +55,11 @@ pub enum CutsceneAction {
 
     // Dialogue
     /// Show a dialogue box with speaker name, text, and optional portrait.
-    ShowDialogue { speaker: String, text: String, portrait: Option<String> },
+    ShowDialogue {
+        speaker: String,
+        text: String,
+        portrait: Option<String>,
+    },
     /// Show a multiple-choice prompt.
     ShowChoice { choices: Vec<String> },
 

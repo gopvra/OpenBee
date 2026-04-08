@@ -1,9 +1,9 @@
 //! Loader for WAV audio files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
 use crate::audio::sound::SoundData;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// Loader for `.wav` audio files.
 #[derive(Clone)]
@@ -34,17 +34,24 @@ impl ResourceLoader for WavLoader {
         let mut offset = 36;
         while offset + 8 < data.len() {
             let chunk_id = &data[offset..offset + 4];
-            let chunk_size =
-                u32::from_le_bytes([data[offset + 4], data[offset + 5], data[offset + 6], data[offset + 7]])
-                    as usize;
+            let chunk_size = u32::from_le_bytes([
+                data[offset + 4],
+                data[offset + 5],
+                data[offset + 6],
+                data[offset + 7],
+            ]) as usize;
             if chunk_id == b"data" {
-                let audio_data = &data[offset + 8..std::cmp::min(offset + 8 + chunk_size, data.len())];
+                let audio_data =
+                    &data[offset + 8..std::cmp::min(offset + 8 + chunk_size, data.len())];
                 let samples = match bits_per_sample {
                     16 => audio_data
                         .chunks_exact(2)
                         .map(|c| i16::from_le_bytes([c[0], c[1]]))
                         .collect(),
-                    8 => audio_data.iter().map(|&b| ((b as i16) - 128) * 256).collect(),
+                    8 => audio_data
+                        .iter()
+                        .map(|&b| ((b as i16) - 128) * 256)
+                        .collect(),
                     _ => {
                         bail!(
                             "Unsupported bits per sample: {} in {}",

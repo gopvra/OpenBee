@@ -81,9 +81,7 @@ pub fn draw_property_panel(ui: &mut egui::Ui, app: &mut EditorApp) {
             ui.label(&key);
             if ui.text_edit_singleline(&mut val).changed() {
                 if let Some(ref mut doc) = app.current_level {
-                    if let Some(a) =
-                        doc.level_data.actors.iter_mut().find(|a| a.id == entity_id)
-                    {
+                    if let Some(a) = doc.level_data.actors.iter_mut().find(|a| a.id == entity_id) {
                         a.properties.insert(key.clone(), val.clone());
                         doc.modified = true;
                         let action = EditorAction {

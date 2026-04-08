@@ -5,10 +5,10 @@
 // mod support, and more.
 
 use anyhow::Result;
-use tracing::{info, error, Level};
+use tracing::{error, info, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use openbee_game::game_app::{BeeGameApp, GameConfig, Difficulty};
+use openbee_game::game_app::{BeeGameApp, Difficulty, GameConfig};
 
 fn main() -> Result<()> {
     // Initialize logging
@@ -19,8 +19,7 @@ fn main() -> Result<()> {
         .with_file(true)
         .with_line_number(true)
         .finish();
-    tracing::subscriber::set_global_default(subscriber)
-        .expect("Failed to set tracing subscriber");
+    tracing::subscriber::set_global_default(subscriber).expect("Failed to set tracing subscriber");
 
     info!("OpenBee v{} starting up...", env!("CARGO_PKG_VERSION"));
     info!("Rust reimplementation of Captain Claw (1997)");
@@ -56,19 +55,26 @@ fn parse_launch_mode(args: &[String]) -> LaunchMode {
     match args[1].as_str() {
         "--editor" | "-e" => LaunchMode::Editor,
         "--server" | "-s" => {
-            let addr = args.get(2).cloned().unwrap_or_else(|| "0.0.0.0".to_string());
-            let port = args.get(3)
-                .and_then(|p| p.parse().ok())
-                .unwrap_or(27015);
+            let addr = args
+                .get(2)
+                .cloned()
+                .unwrap_or_else(|| "0.0.0.0".to_string());
+            let port = args.get(3).and_then(|p| p.parse().ok()).unwrap_or(27015);
             LaunchMode::Server(addr, port)
         }
         "--help" | "-h" => LaunchMode::Help,
         "--fullscreen" | "-f" => {
-            let config = GameConfig { fullscreen: true, ..Default::default() };
+            let config = GameConfig {
+                fullscreen: true,
+                ..Default::default()
+            };
             LaunchMode::Game(config)
         }
         "--windowed" | "-w" => {
-            let config = GameConfig { fullscreen: false, ..Default::default() };
+            let config = GameConfig {
+                fullscreen: false,
+                ..Default::default()
+            };
             LaunchMode::Game(config)
         }
         "--difficulty" | "-d" => {
@@ -91,9 +97,10 @@ fn parse_launch_mode(args: &[String]) -> LaunchMode {
 
 fn run_game(config: GameConfig) -> Result<()> {
     info!("Starting game mode...");
-    info!("Window: {}x{}, Fullscreen: {}, VSync: {}",
-        config.window_width, config.window_height,
-        config.fullscreen, config.vsync);
+    info!(
+        "Window: {}x{}, Fullscreen: {}, VSync: {}",
+        config.window_width, config.window_height, config.fullscreen, config.vsync
+    );
 
     let mut app = BeeGameApp::new(config)?;
     app.initialize()?;

@@ -66,9 +66,7 @@ impl ModRegistry {
 
     /// Check whether a mod is currently enabled.
     pub fn is_enabled(&self, mod_id: &str) -> bool {
-        self.entries
-            .get(mod_id)
-            .is_some_and(|e| e.enabled)
+        self.entries.get(mod_id).is_some_and(|e| e.enabled)
     }
 
     /// Get the registry entry for a mod.

@@ -66,7 +66,8 @@ impl MovementSystem {
                 elevator.wait_timer = elevator.wait_time;
 
                 if elevator.one_way {
-                    elevator.current_waypoint = (elevator.current_waypoint + 1) % elevator.waypoints.len();
+                    elevator.current_waypoint =
+                        (elevator.current_waypoint + 1) % elevator.waypoints.len();
                 } else {
                     let next = elevator.current_waypoint as i32 + elevator.direction;
                     if next < 0 || next >= elevator.waypoints.len() as i32 {
@@ -160,7 +161,10 @@ impl MovementSystem {
 
             if let Some(target_pos) = target_pos {
                 let (speed, max_dist) = {
-                    let follow = world.get_component::<FollowableComponent>(entity).unwrap();
+                    // SAFETY: We confirmed this entity has a FollowableComponent above.
+                    let Some(follow) = world.get_component::<FollowableComponent>(entity) else {
+                        continue;
+                    };
                     (follow.speed, follow.max_distance)
                 };
                 if let Some(transform) = world.get_component_mut::<TransformComponent>(entity) {

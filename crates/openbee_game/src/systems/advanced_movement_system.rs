@@ -279,8 +279,7 @@ impl AdvancedMovementSystem {
                 swim.breath_remaining = (swim.breath_remaining - dt).max(0.0);
             } else if swim.breath_remaining < swim.breath_max {
                 // Recover breath when not submerged (fast recovery).
-                swim.breath_remaining =
-                    (swim.breath_remaining + dt * 3.0).min(swim.breath_max);
+                swim.breath_remaining = (swim.breath_remaining + dt * 3.0).min(swim.breath_max);
             }
 
             (

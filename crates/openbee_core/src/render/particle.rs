@@ -115,11 +115,14 @@ impl ParticleEmitter {
     pub fn spawn(&mut self) -> Particle {
         let angle_offset = self.random_range(-self.config.spread * 0.5, self.config.spread * 0.5);
         let angle = self.config.direction + angle_offset;
-        let speed =
-            self.config.speed + self.random_range(-self.config.speed_variance, self.config.speed_variance);
+        let speed = self.config.speed
+            + self.random_range(-self.config.speed_variance, self.config.speed_variance);
         let lifetime = (self.config.lifetime
-            + self.random_range(-self.config.lifetime_variance, self.config.lifetime_variance))
-            .max(0.01);
+            + self.random_range(
+                -self.config.lifetime_variance,
+                self.config.lifetime_variance,
+            ))
+        .max(0.01);
 
         Particle {
             position: self.position,

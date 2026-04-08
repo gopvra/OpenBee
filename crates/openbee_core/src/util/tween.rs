@@ -529,11 +529,8 @@ impl TweenManager {
             if seq.current_index < seq.tweens.len() {
                 let t = &seq.tweens[seq.current_index];
                 Some(t.from + (t.to - t.from) * ease(t.progress(), t.ease_type))
-            } else if !seq.tweens.is_empty() {
-                let last = seq.tweens.last().unwrap();
-                Some(last.to)
             } else {
-                None
+                seq.tweens.last().map(|last| last.to)
             }
         } else {
             None

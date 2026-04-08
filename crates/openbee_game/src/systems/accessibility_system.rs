@@ -3,6 +3,9 @@
 use openbee_core::ecs::{System, World};
 use serde::{Deserialize, Serialize};
 
+/// Maximum allowed size for accessibility config files (1 MB).
+const MAX_CONFIG_SIZE: u64 = 1024 * 1024;
+
 /// Colorblind simulation modes.
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 pub enum ColorblindMode {
@@ -192,16 +195,26 @@ impl AccessibilitySystem {
         !self.settings.screen_flash_reduction
     }
 
+    // NOTE: Caller is responsible for sandbox validation
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
-        let json = serde_json::to_string_pretty(&self.settings)
-            .map_err(std::io::Error::other)?;
+        let json = serde_json::to_string_pretty(&self.settings).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
+    // NOTE: Caller is responsible for sandbox validation
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
+        // Validate file size to prevent memory exhaustion attacks
+        let metadata = std::fs::metadata(path)?;
+        if metadata.len() > MAX_CONFIG_SIZE {
+            return Err(std::io::Error::other(format!(
+                "File too large: {} bytes (max {})",
+                metadata.len(),
+                MAX_CONFIG_SIZE
+            )));
+        }
+
         let json = std::fs::read_to_string(path)?;
-        self.settings = serde_json::from_str(&json)
-            .map_err(std::io::Error::other)?;
+        self.settings = serde_json::from_str(&json).map_err(std::io::Error::other)?;
         Ok(())
     }
 }

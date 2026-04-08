@@ -69,7 +69,10 @@ impl TogglePegComponent {
 
     /// Whether the peg is currently solid (can be stood on).
     pub fn is_solid(&self) -> bool {
-        matches!(self.state, TogglePegState::Solid | TogglePegState::FadingOut)
+        matches!(
+            self.state,
+            TogglePegState::Solid | TogglePegState::FadingOut
+        )
     }
 
     /// Visual opacity for rendering (0.0 = invisible, 1.0 = fully visible).

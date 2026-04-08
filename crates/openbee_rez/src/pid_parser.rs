@@ -70,6 +70,7 @@ impl PidImage {
         let offset_x = cursor.read_i32::<LittleEndian>()?;
         let offset_y = cursor.read_i32::<LittleEndian>()?;
 
+        // SAFETY: width and height are u32; u32 always fits in usize (min 32-bit).
         let pixel_count = (width as usize)
             .checked_mul(height as usize)
             .ok_or(PidError::InvalidDimensions { width, height })?;
@@ -117,6 +118,7 @@ impl PidImage {
 
             if byte & 0x80 != 0 {
                 // Run of transparent pixels
+                // SAFETY: 7-bit value (0..127) always fits in usize.
                 let count = (byte & 0x7F) as usize;
                 pixels.resize(pixels.len() + count, 0);
             } else {

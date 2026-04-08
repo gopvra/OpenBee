@@ -70,9 +70,7 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
     // Physics.get_gravity() -> Vec2
     physics.set(
         "get_gravity",
-        lua.create_function(|_, ()| {
-            Ok(LuaVec2 { x: 0.0, y: -9.81 })
-        })?,
+        lua.create_function(|_, ()| Ok(LuaVec2 { x: 0.0, y: -9.81 }))?,
     )?;
 
     // Physics.set_body_type(entity, type_str)

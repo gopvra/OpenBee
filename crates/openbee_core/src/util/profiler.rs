@@ -54,6 +54,7 @@ impl Profiler {
 
     /// Initialize the global profiler singleton.
     pub fn init_global() {
+        // SAFETY: Poisoned lock means a thread panicked while holding it; propagating the panic is correct.
         let mut lock = GLOBAL_PROFILER.lock().unwrap();
         *lock = Some(Profiler::new());
     }

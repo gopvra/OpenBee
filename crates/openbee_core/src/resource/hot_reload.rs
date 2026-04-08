@@ -138,7 +138,8 @@ impl HotReloadWatcher {
                     }
                 }
 
-                if let std::collections::hash_map::Entry::Vacant(e) = self.watched_files.entry(path) {
+                if let std::collections::hash_map::Entry::Vacant(e) = self.watched_files.entry(path)
+                {
                     if let Ok(meta) = std::fs::metadata(e.key()) {
                         if let Ok(modified) = meta.modified() {
                             e.insert(modified);

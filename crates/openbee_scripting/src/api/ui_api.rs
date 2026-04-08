@@ -13,11 +13,13 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
     // options: { font_size, color, align }
     ui.set(
         "show_text",
-        lua.create_function(|_, (text, x, y, opts): (String, f32, f32, Option<LuaTable>)| {
-            debug!("Lua: UI.show_text('{text}', {x}, {y})");
-            let _ = opts; // consumed by the real renderer
-            Ok(())
-        })?,
+        lua.create_function(
+            |_, (text, x, y, opts): (String, f32, f32, Option<LuaTable>)| {
+                debug!("Lua: UI.show_text('{text}', {x}, {y})");
+                let _ = opts; // consumed by the real renderer
+                Ok(())
+            },
+        )?,
     )?;
 
     // UI.create_button(id, text, x, y, w, h) -> button_id
@@ -76,9 +78,7 @@ pub fn register(lua: &Lua) -> LuaResult<()> {
                 f32,
                 Option<LuaColor>,
             )| {
-                debug!(
-                    "Lua: UI.show_progress_bar('{id}', {x},{y},{w},{h}, {value}/{max_value})"
-                );
+                debug!("Lua: UI.show_progress_bar('{id}', {x},{y},{w},{h}, {value}/{max_value})");
                 Ok(())
             },
         )?,

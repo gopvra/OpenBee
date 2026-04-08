@@ -119,6 +119,7 @@ impl SandboxedFs {
             SandboxError::Io(e)
         })?;
 
+        // SAFETY: Poisoned lock means a thread panicked; propagating is correct.
         let mut allowed = self.allowed.write().unwrap();
         // Avoid duplicates.
         if !allowed.iter().any(|d| d.canonical == canonical) {
@@ -143,6 +144,7 @@ impl SandboxedFs {
     /// Remove a previously allowed directory.
     pub fn remove_allowed_directory(&self, path: impl AsRef<Path>) -> SandboxResult<()> {
         let canonical = std::fs::canonicalize(path.as_ref())?;
+        // SAFETY: Poisoned lock means a thread panicked; propagating is correct.
         let mut allowed = self.allowed.write().unwrap();
         allowed.retain(|d| d.canonical != canonical);
         Ok(())
@@ -150,10 +152,17 @@ impl SandboxedFs {
 
     /// List all currently allowed directories.
     pub fn list_allowed(&self) -> Vec<(String, Permission, String)> {
+        // SAFETY: Poisoned lock means a thread panicked; propagating is correct.
         let allowed = self.allowed.read().unwrap();
         allowed
             .iter()
-            .map(|d| (d.canonical.display().to_string(), d.permission, d.label.clone()))
+            .map(|d| {
+                (
+                    d.canonical.display().to_string(),
+                    d.permission,
+                    d.label.clone(),
+                )
+            })
             .collect()
     }
 
@@ -162,6 +171,7 @@ impl SandboxedFs {
     /// Validate that a read operation on `path` is permitted.
     pub fn validate_read(&self, path: impl AsRef<Path>) -> SandboxResult<PathBuf> {
         let resolved = self.resolve_and_check(path.as_ref())?;
+        // SAFETY: Poisoned lock means a thread panicked; propagating is correct.
         let allowed = self.allowed.read().unwrap();
         for dir in allowed.iter() {
             if resolved.starts_with(&dir.canonical) {
@@ -176,6 +186,7 @@ impl SandboxedFs {
     /// Validate that a write operation on `path` is permitted.
     pub fn validate_write(&self, path: impl AsRef<Path>) -> SandboxResult<PathBuf> {
         let resolved = self.resolve_and_check(path.as_ref())?;
+        // SAFETY: Poisoned lock means a thread panicked; propagating is correct.
         let allowed = self.allowed.read().unwrap();
         for dir in allowed.iter() {
             if resolved.starts_with(&dir.canonical) && dir.permission == Permission::ReadWrite {
@@ -230,7 +241,9 @@ impl SandboxedFs {
 
     /// Check if a path exists, sandbox-checked.
     pub fn exists(&self, path: impl AsRef<Path>) -> bool {
-        self.validate_read(path).map(|p| p.exists()).unwrap_or(false)
+        self.validate_read(path)
+            .map(|p| p.exists())
+            .unwrap_or(false)
     }
 
     // ---- Internal ----
@@ -251,7 +264,10 @@ impl SandboxedFs {
         let component_count = path.components().count();
         if component_count > self.max_path_depth {
             return Err(SandboxError::PathTraversal {
-                path: format!("Path too deep ({} components, max {})", component_count, self.max_path_depth),
+                path: format!(
+                    "Path too deep ({} components, max {})",
+                    component_count, self.max_path_depth
+                ),
             });
         }
 
@@ -386,8 +402,12 @@ mod tests {
     fn test_sandbox_blocks_traversal_patterns() {
         let sandbox = SandboxedFs::new();
         assert!(sandbox.validate_read(Path::new("/some/.env/file")).is_err());
-        assert!(sandbox.validate_read(Path::new("/path/to/.ssh/key")).is_err());
-        assert!(sandbox.validate_read(Path::new("/path/to/.git/config")).is_err());
+        assert!(sandbox
+            .validate_read(Path::new("/path/to/.ssh/key"))
+            .is_err());
+        assert!(sandbox
+            .validate_read(Path::new("/path/to/.git/config"))
+            .is_err());
     }
 
     #[test]

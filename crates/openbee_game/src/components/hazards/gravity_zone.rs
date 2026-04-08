@@ -36,10 +36,7 @@ pub enum GravityZoneType {
     /// Sets gravity to zero within the zone.
     Zero,
     /// Gravity points toward a specific point.
-    Radial {
-        center_x: f32,
-        center_y: f32,
-    },
+    Radial { center_x: f32, center_y: f32 },
 }
 
 impl Default for GravityZoneComponent {

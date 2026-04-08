@@ -83,11 +83,15 @@ impl ScreenshotManager {
                 .ok_or_else(|| anyhow::anyhow!("failed to create image buffer from raw pixels"))?;
 
         match self.format {
-            ScreenshotFormat::Png => image_buffer.save_with_format(&path, image::ImageFormat::Png)?,
+            ScreenshotFormat::Png => {
+                image_buffer.save_with_format(&path, image::ImageFormat::Png)?
+            }
             ScreenshotFormat::Jpg => {
                 image_buffer.save_with_format(&path, image::ImageFormat::Jpeg)?
             }
-            ScreenshotFormat::Bmp => image_buffer.save_with_format(&path, image::ImageFormat::Bmp)?,
+            ScreenshotFormat::Bmp => {
+                image_buffer.save_with_format(&path, image::ImageFormat::Bmp)?
+            }
         }
 
         info!("Screenshot saved to {}", path.display());

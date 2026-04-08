@@ -68,7 +68,9 @@ pub struct LevelData {
 impl LevelData {
     /// Get the action plane (the main gameplay plane, typically index 1).
     pub fn action_plane(&self) -> Option<&LevelPlane> {
-        self.planes.iter().find(|p| p.name == "Action" || p.z_order == 0)
+        self.planes
+            .iter()
+            .find(|p| p.name == "Action" || p.z_order == 0)
     }
 
     /// Get the level bounds as a rectangle.

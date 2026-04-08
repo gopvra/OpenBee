@@ -1,8 +1,8 @@
 //! Loader for Captain Claw ANI (animation) files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// Parsed ANI animation data.
 #[derive(Debug, Clone)]

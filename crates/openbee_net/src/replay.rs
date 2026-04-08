@@ -1,9 +1,9 @@
 //! Replay recording and playback — captures per-tick input and event data so
 //! that a game session can be deterministically replayed.
 
-use std::fs;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use std::fs;
 
 use crate::protocol::PlayerInputData;
 

@@ -71,8 +71,11 @@ impl ResourceManager {
 
         let arc: Arc<T> = Arc::from(typed);
         let size = std::mem::size_of::<T>(); // rough estimate
-        self.cache
-            .insert(path.to_string(), arc.clone() as Arc<dyn Any + Send + Sync>, size);
+        self.cache.insert(
+            path.to_string(),
+            arc.clone() as Arc<dyn Any + Send + Sync>,
+            size,
+        );
 
         Ok(arc)
     }

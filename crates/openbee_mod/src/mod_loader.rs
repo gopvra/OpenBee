@@ -69,10 +69,17 @@ impl ModLoader {
             match fs::read_to_string(&manifest_path) {
                 Ok(json) => match ModManifest::from_json(&json) {
                     Ok(manifest) => {
-                        info!("Discovered mod '{}' v{} at {:?}", manifest.name, manifest.version, path);
+                        info!(
+                            "Discovered mod '{}' v{} at {:?}",
+                            manifest.name, manifest.version, path
+                        );
 
                         // Only add if not already known.
-                        if !self.loaded_mods.iter().any(|m| m.manifest.id == manifest.id) {
+                        if !self
+                            .loaded_mods
+                            .iter()
+                            .any(|m| m.manifest.id == manifest.id)
+                        {
                             let order = self.loaded_mods.len() as u32;
                             self.loaded_mods.push(LoadedMod {
                                 manifest: manifest.clone(),
@@ -122,8 +129,7 @@ impl ModLoader {
             .iter()
             .filter(|m| m.enabled && m.manifest.id != mod_id)
             .filter(|m| {
-                entry_conflicts.contains(&m.manifest.id)
-                    || m.manifest.conflicts.contains(&entry_id)
+                entry_conflicts.contains(&m.manifest.id) || m.manifest.conflicts.contains(&entry_id)
             })
             .map(|m| m.manifest.name.clone())
             .collect();
@@ -141,7 +147,7 @@ impl ModLoader {
             .loaded_mods
             .iter_mut()
             .find(|m| m.manifest.id == mod_id)
-            .unwrap();
+            .ok_or_else(|| anyhow::anyhow!("Mod '{mod_id}' not found"))?;
         entry.enabled = true;
         info!("Loaded mod '{}'", entry.manifest.name);
         Ok(())
@@ -220,7 +226,14 @@ impl ModLoader {
         for i in 0..n {
             if !visited[i] {
                 let mut stack = Vec::new();
-                visit(i, &self.loaded_mods, &id_to_idx, &mut visited, &mut ordered, &mut stack)?;
+                visit(
+                    i,
+                    &self.loaded_mods,
+                    &id_to_idx,
+                    &mut visited,
+                    &mut ordered,
+                    &mut stack,
+                )?;
             }
         }
 

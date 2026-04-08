@@ -97,7 +97,11 @@ impl ResourceCache {
         if let Some(key) = lru_key {
             if let Some(entry) = self.entries.remove(&key) {
                 self.current_memory = self.current_memory.saturating_sub(entry.size);
-                tracing::debug!("Evicted resource from cache: {} ({} bytes)", key, entry.size);
+                tracing::debug!(
+                    "Evicted resource from cache: {} ({} bytes)",
+                    key,
+                    entry.size
+                );
             }
         }
     }

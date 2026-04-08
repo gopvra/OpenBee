@@ -42,6 +42,9 @@ pub enum PcxError {
     #[error("RLE decode error at offset {0}")]
     RleDecodeError(usize),
 
+    #[error("invalid size value in PCX header")]
+    InvalidSize,
+
     #[error("missing VGA palette at end of file")]
     MissingPalette,
 }
@@ -81,10 +84,11 @@ impl PcxImage {
         let _encoding = cursor.read_u8()?;
         let bits_per_pixel = cursor.read_u8()?;
 
-        let xmin = cursor.read_u16::<LittleEndian>()? as u32;
-        let ymin = cursor.read_u16::<LittleEndian>()? as u32;
-        let xmax = cursor.read_u16::<LittleEndian>()? as u32;
-        let ymax = cursor.read_u16::<LittleEndian>()? as u32;
+        // SAFETY: u16 always fits in u32.
+        let xmin = u32::from(cursor.read_u16::<LittleEndian>()?);
+        let ymin = u32::from(cursor.read_u16::<LittleEndian>()?);
+        let xmax = u32::from(cursor.read_u16::<LittleEndian>()?);
+        let ymax = u32::from(cursor.read_u16::<LittleEndian>()?);
 
         let _hdpi = cursor.read_u16::<LittleEndian>()?;
         let _vdpi = cursor.read_u16::<LittleEndian>()?;
@@ -94,7 +98,7 @@ impl PcxImage {
         std::io::Read::read_exact(&mut cursor, &mut _skip)?;
 
         let num_planes = cursor.read_u8()?;
-        let bytes_per_line = cursor.read_u16::<LittleEndian>()? as usize;
+        let bytes_per_line = usize::from(cursor.read_u16::<LittleEndian>()?);
         let _palette_info = cursor.read_u16::<LittleEndian>()?;
 
         // Skip remaining header padding (62 bytes to reach offset 128)
@@ -105,14 +109,23 @@ impl PcxImage {
         let height = ymax - ymin + 1;
 
         // Decode RLE scanlines
-        let total_bytes = bytes_per_line * (num_planes as usize) * (height as usize);
+        // SAFETY: num_planes is u8 and height is u32; product with bytes_per_line
+        // is bounded and cannot overflow on 32+ bit platforms for valid images.
+        let total_bytes = bytes_per_line
+            .checked_mul(num_planes as usize)
+            .and_then(|v| v.checked_mul(height as usize))
+            .ok_or(PcxError::InvalidSize)?;
         let rle_data = &data[128..];
         let decoded = Self::decode_rle(rle_data, total_bytes)?;
 
         // Extract pixel data
         let pixels = if num_planes == 1 && bits_per_pixel == 8 {
             // 8-bit indexed color — one plane, one byte per pixel
-            let mut px = Vec::with_capacity((width * height) as usize);
+            let mut px = Vec::with_capacity(
+                (width as usize)
+                    .checked_mul(height as usize)
+                    .ok_or(PcxError::InvalidSize)?,
+            );
             for y in 0..height as usize {
                 let line_start = y * bytes_per_line;
                 for x in 0..width as usize {
@@ -169,6 +182,7 @@ impl PcxImage {
 
             if byte & 0xC0 == 0xC0 {
                 // Run-length encoded: lower 6 bits = count
+                // SAFETY: 6-bit value (0..63) always fits in usize.
                 let count = (byte & 0x3F) as usize;
                 if pos >= data.len() {
                     return Err(PcxError::RleDecodeError(pos));
@@ -197,6 +211,7 @@ impl PcxImage {
 
         if let Some(ref palette) = self.palette {
             for &index in &self.pixels {
+                // SAFETY: index is u8 (0..255); palette has 256 entries.
                 let c = palette[index as usize];
                 rgba.extend_from_slice(&[c[0], c[1], c[2], 255]);
             }
@@ -236,7 +251,7 @@ mod tests {
 
         // num_planes is at offset 65 in the PCX header
         buf[65] = 1; // num_planes
-        // bytes_per_line is at offset 66-67 (u16 LE)
+                     // bytes_per_line is at offset 66-67 (u16 LE)
         buf[66] = 2; // bytes_per_line = 2
         buf[67] = 0;
 

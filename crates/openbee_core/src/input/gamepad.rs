@@ -1,6 +1,6 @@
 //! Gamepad (controller) input types and manager using gilrs.
 
-use gilrs::{Gilrs, Event as GilrsEvent, EventType as GilrsEventType};
+use gilrs::{Event as GilrsEvent, EventType as GilrsEventType, Gilrs};
 use std::collections::HashMap;
 
 /// Unique identifier for a connected gamepad.
@@ -11,10 +11,10 @@ pub struct GamepadId(pub usize);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[allow(dead_code)]
 pub enum GamepadButton {
-    South,      // A / Cross
-    East,       // B / Circle
-    West,       // X / Square
-    North,      // Y / Triangle
+    South, // A / Cross
+    East,  // B / Circle
+    West,  // X / Square
+    North, // Y / Triangle
     LeftBumper,
     RightBumper,
     LeftTrigger,

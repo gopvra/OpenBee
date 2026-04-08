@@ -94,7 +94,10 @@ impl GameLogic {
 
     /// Transition to a new game state.
     pub fn set_state(&mut self, new_state: GameState) {
-        debug!("Game state transition: {:?} -> {:?}", self.game_state, new_state);
+        debug!(
+            "Game state transition: {:?} -> {:?}",
+            self.game_state, new_state
+        );
         self.game_state = new_state;
     }
 
@@ -119,7 +122,10 @@ impl GameLogic {
             y: position.y,
             level: self.current_level,
         };
-        info!("Checkpoint activated at ({}, {}) level {}", cp.x, cp.y, cp.level);
+        info!(
+            "Checkpoint activated at ({}, {}) level {}",
+            cp.x, cp.y, cp.level
+        );
         self.checkpoints.push(cp);
     }
 

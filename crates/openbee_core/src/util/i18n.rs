@@ -1,8 +1,8 @@
 //! Internationalization (i18n) system for multi-language support.
 
-use std::collections::HashMap;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// Data for a single locale containing all translated strings.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -35,7 +35,11 @@ impl I18nManager {
 
     pub fn load_locale(&mut self, data: LocaleData) {
         let entry = (data.language_code.clone(), data.language_name.clone());
-        if !self.available_languages.iter().any(|(c, _)| c == &data.language_code) {
+        if !self
+            .available_languages
+            .iter()
+            .any(|(c, _)| c == &data.language_code)
+        {
             self.available_languages.push(entry);
         }
         self.locales.insert(data.language_code.clone(), data);
@@ -157,17 +161,38 @@ impl I18nManager {
         s.insert("pickup.map_piece".into(), "Map Piece".into());
         s.insert("pickup.gem".into(), "Gem".into());
         // Achievements
-        s.insert("achievement.unlocked".into(), "Achievement Unlocked!".into());
+        s.insert(
+            "achievement.unlocked".into(),
+            "Achievement Unlocked!".into(),
+        );
         s.insert("achievement.first_blood".into(), "First Blood".into());
-        s.insert("achievement.first_blood_desc".into(), "Defeat your first enemy".into());
+        s.insert(
+            "achievement.first_blood_desc".into(),
+            "Defeat your first enemy".into(),
+        );
         s.insert("achievement.boss_slayer".into(), "Boss Slayer".into());
-        s.insert("achievement.boss_slayer_desc".into(), "Defeat a boss".into());
-        s.insert("achievement.treasure_hunter".into(), "Treasure Hunter".into());
-        s.insert("achievement.treasure_hunter_desc".into(), "Collect 1000 treasures".into());
+        s.insert(
+            "achievement.boss_slayer_desc".into(),
+            "Defeat a boss".into(),
+        );
+        s.insert(
+            "achievement.treasure_hunter".into(),
+            "Treasure Hunter".into(),
+        );
+        s.insert(
+            "achievement.treasure_hunter_desc".into(),
+            "Collect 1000 treasures".into(),
+        );
         s.insert("achievement.speed_demon".into(), "Speed Demon".into());
-        s.insert("achievement.speed_demon_desc".into(), "Complete a level under 2 minutes".into());
+        s.insert(
+            "achievement.speed_demon_desc".into(),
+            "Complete a level under 2 minutes".into(),
+        );
         s.insert("achievement.untouchable".into(), "Untouchable".into());
-        s.insert("achievement.untouchable_desc".into(), "Complete a level without taking damage".into());
+        s.insert(
+            "achievement.untouchable_desc".into(),
+            "Complete a level without taking damage".into(),
+        );
         // Speedrun
         s.insert("speedrun.timer".into(), "Timer".into());
         s.insert("speedrun.split".into(), "Split".into());
@@ -283,10 +308,11 @@ mod tests {
     #[test]
     fn test_i18n_args() {
         let mut mgr = I18nManager::new("en");
-        mgr.locales.get_mut("en").unwrap().strings.insert(
-            "greeting".into(),
-            "Hello, {name}! Score: {score}".into(),
-        );
+        mgr.locales
+            .get_mut("en")
+            .unwrap()
+            .strings
+            .insert("greeting".into(), "Hello, {name}! Score: {score}".into());
         let mut args = HashMap::new();
         args.insert("name".into(), "Captain Claw".into());
         args.insert("score".into(), "9999".into());

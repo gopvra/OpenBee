@@ -16,30 +16,84 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum PatternStep {
     // -- Movement --
-    MoveTo { x: f32, y: f32, speed: f32 },
-    MoveRelative { dx: f32, dy: f32, speed: f32 },
-    Dash { direction: f32, speed: f32, duration: f32 },
-    Teleport { x: f32, y: f32 },
+    MoveTo {
+        x: f32,
+        y: f32,
+        speed: f32,
+    },
+    MoveRelative {
+        dx: f32,
+        dy: f32,
+        speed: f32,
+    },
+    Dash {
+        direction: f32,
+        speed: f32,
+        duration: f32,
+    },
+    Teleport {
+        x: f32,
+        y: f32,
+    },
     FacePlayer,
 
     // -- Combat --
-    FireProjectile { projectile: String, speed: f32, angle: f32 },
-    FireSpread { projectile: String, count: u32, spread_angle: f32, speed: f32 },
-    FireCircle { projectile: String, count: u32, speed: f32 },
+    FireProjectile {
+        projectile: String,
+        speed: f32,
+        angle: f32,
+    },
+    FireSpread {
+        projectile: String,
+        count: u32,
+        spread_angle: f32,
+        speed: f32,
+    },
+    FireCircle {
+        projectile: String,
+        count: u32,
+        speed: f32,
+    },
     /// Fire a projectile aimed at the player's current position.
-    FireAimed { projectile: String, speed: f32 },
-    MeleeAttack { damage: i32, range: f32 },
+    FireAimed {
+        projectile: String,
+        speed: f32,
+    },
+    MeleeAttack {
+        damage: i32,
+        range: f32,
+    },
 
     // -- Spawning --
-    SpawnMinion { template: String, x: f32, y: f32 },
-    SpawnMinionCircle { template: String, count: u32, radius: f32 },
+    SpawnMinion {
+        template: String,
+        x: f32,
+        y: f32,
+    },
+    SpawnMinionCircle {
+        template: String,
+        count: u32,
+        radius: f32,
+    },
 
     // -- Flow control --
-    Wait { seconds: f32 },
-    WaitRandom { min: f32, max: f32 },
-    Repeat { count: u32, steps: Vec<PatternStep> },
-    RepeatForever { steps: Vec<PatternStep> },
-    RandomChoice { options: Vec<Vec<PatternStep>> },
+    Wait {
+        seconds: f32,
+    },
+    WaitRandom {
+        min: f32,
+        max: f32,
+    },
+    Repeat {
+        count: u32,
+        steps: Vec<PatternStep>,
+    },
+    RepeatForever {
+        steps: Vec<PatternStep>,
+    },
+    RandomChoice {
+        options: Vec<Vec<PatternStep>>,
+    },
     Conditional {
         condition: PatternCondition,
         then_steps: Vec<PatternStep>,
@@ -47,20 +101,44 @@ pub enum PatternStep {
     },
 
     // -- Effects --
-    PlayAnimation { name: String },
-    PlaySound { path: String },
-    ScreenShake { intensity: f32, duration: f32 },
-    ScreenFlash { color: [u8; 4], duration: f32 },
-    SlowMotion { scale: f32, duration: f32 },
+    PlayAnimation {
+        name: String,
+    },
+    PlaySound {
+        path: String,
+    },
+    ScreenShake {
+        intensity: f32,
+        duration: f32,
+    },
+    ScreenFlash {
+        color: [u8; 4],
+        duration: f32,
+    },
+    SlowMotion {
+        scale: f32,
+        duration: f32,
+    },
 
     // -- State --
-    SetInvulnerable { invulnerable: bool },
-    SetPhase { phase: u32 },
-    SetSpeed { speed: f32 },
-    Heal { amount: i32 },
+    SetInvulnerable {
+        invulnerable: bool,
+    },
+    SetPhase {
+        phase: u32,
+    },
+    SetSpeed {
+        speed: f32,
+    },
+    Heal {
+        amount: i32,
+    },
 
     // -- Dialogue --
-    ShowText { text: String, duration: f32 },
+    ShowText {
+        text: String,
+        duration: f32,
+    },
 }
 
 /// Conditions that can be used for branching within patterns.
@@ -127,19 +205,59 @@ pub struct BossDefinition {
 /// Actions emitted by the pattern executor for consumption by game systems.
 #[derive(Debug, Clone)]
 pub enum PatternAction {
-    Move { x: f32, y: f32, speed: f32 },
-    FireProjectile { template: String, x: f32, y: f32, angle: f32, speed: f32 },
-    SpawnEntity { template: String, x: f32, y: f32 },
-    PlayAnimation { name: String },
-    PlaySound { path: String },
-    ScreenShake { intensity: f32, duration: f32 },
-    ScreenFlash { color: [u8; 4], duration: f32 },
-    SlowMotion { scale: f32, duration: f32 },
-    ShowText { text: String, duration: f32 },
-    SetInvulnerable { value: bool },
-    MeleeAttack { damage: i32, range: f32 },
-    Heal { amount: i32 },
-    Teleport { x: f32, y: f32 },
+    Move {
+        x: f32,
+        y: f32,
+        speed: f32,
+    },
+    FireProjectile {
+        template: String,
+        x: f32,
+        y: f32,
+        angle: f32,
+        speed: f32,
+    },
+    SpawnEntity {
+        template: String,
+        x: f32,
+        y: f32,
+    },
+    PlayAnimation {
+        name: String,
+    },
+    PlaySound {
+        path: String,
+    },
+    ScreenShake {
+        intensity: f32,
+        duration: f32,
+    },
+    ScreenFlash {
+        color: [u8; 4],
+        duration: f32,
+    },
+    SlowMotion {
+        scale: f32,
+        duration: f32,
+    },
+    ShowText {
+        text: String,
+        duration: f32,
+    },
+    SetInvulnerable {
+        value: bool,
+    },
+    MeleeAttack {
+        damage: i32,
+        range: f32,
+    },
+    Heal {
+        amount: i32,
+    },
+    Teleport {
+        x: f32,
+        y: f32,
+    },
     FacePlayer,
     Nothing,
 }
@@ -697,7 +815,9 @@ pub fn example_red_tail_boss() -> BossDefinition {
                 duration: 2.0,
             },
             PatternStep::Wait { seconds: 1.5 },
-            PatternStep::SetInvulnerable { invulnerable: false },
+            PatternStep::SetInvulnerable {
+                invulnerable: false,
+            },
         ]),
         death_pattern: Some(vec![
             PatternStep::SetInvulnerable { invulnerable: true },
@@ -784,7 +904,9 @@ pub fn example_red_tail_boss() -> BossDefinition {
                         duration: 2.0,
                     },
                     PatternStep::Wait { seconds: 2.0 },
-                    PatternStep::SetInvulnerable { invulnerable: false },
+                    PatternStep::SetInvulnerable {
+                        invulnerable: false,
+                    },
                 ]),
                 patterns: vec![
                     BossPattern {
@@ -871,7 +993,9 @@ pub fn example_red_tail_boss() -> BossDefinition {
                     },
                     PatternStep::Heal { amount: 50 },
                     PatternStep::Wait { seconds: 2.0 },
-                    PatternStep::SetInvulnerable { invulnerable: false },
+                    PatternStep::SetInvulnerable {
+                        invulnerable: false,
+                    },
                 ]),
                 patterns: vec![BossPattern {
                     name: "desperation_barrage".into(),

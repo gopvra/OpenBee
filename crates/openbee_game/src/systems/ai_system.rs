@@ -26,9 +26,7 @@ impl System for AiSystem {
         for entity in entities {
             let should_update = world
                 .get_component::<EnemyAiComponent>(entity)
-                .is_some_and(|ai| {
-                    ai.state != AiState::Dead
-                });
+                .is_some_and(|ai| ai.state != AiState::Dead);
 
             if !should_update {
                 continue;
@@ -125,7 +123,9 @@ impl System for AiSystem {
                             // Reverse at patrol bounds
                             let dist_home = (my_position.x - home.x).abs();
                             if dist_home > patrol_range {
-                                if let Some(ai) = world.get_component_mut::<EnemyAiComponent>(entity) {
+                                if let Some(ai) =
+                                    world.get_component_mut::<EnemyAiComponent>(entity)
+                                {
                                     ai.facing = -ai.facing;
                                 }
                             }
@@ -134,7 +134,9 @@ impl System for AiSystem {
                             if let Some(player_pos) = player_position {
                                 let dir = (player_pos.x - my_position.x).signum();
                                 kinematic.velocity.x = dir * 150.0;
-                                if let Some(ai) = world.get_component_mut::<EnemyAiComponent>(entity) {
+                                if let Some(ai) =
+                                    world.get_component_mut::<EnemyAiComponent>(entity)
+                                {
                                     ai.facing = dir;
                                 }
                             }

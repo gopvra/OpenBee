@@ -33,7 +33,11 @@ impl ProcessManager {
         let id = ProcessId(self.next_id);
         self.next_id += 1;
         process.on_init();
-        tracing::debug!("ProcessManager: added process '{}' (id={:?})", process.name(), id);
+        tracing::debug!(
+            "ProcessManager: added process '{}' (id={:?})",
+            process.name(),
+            id
+        );
         self.processes.insert(
             id,
             ProcessEntry {

@@ -1,9 +1,9 @@
 //! Loader for MIDI music files using the `midly` crate.
 
-use std::any::Any;
-use anyhow::Result;
 use super::ResourceLoader;
 use crate::audio::music::MidiData;
+use anyhow::Result;
+use std::any::Any;
 
 /// Loader for `.mid` / `.midi` / `.xmi` music files.
 #[derive(Clone)]

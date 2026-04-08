@@ -1,8 +1,8 @@
 //! Loader for Captain Claw WWD (World Description) files.
 
-use std::any::Any;
-use anyhow::{Result, bail};
 use super::ResourceLoader;
+use anyhow::{bail, Result};
+use std::any::Any;
 
 /// Parsed WWD level data (high-level structure).
 #[derive(Debug, Clone)]

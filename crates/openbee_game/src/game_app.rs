@@ -67,8 +67,10 @@ impl BeeGameApp {
     pub fn initialize(&mut self) -> Result<()> {
         info!(
             "Initializing OpenBee {}x{} fullscreen={} vsync={}",
-            self.config.window_width, self.config.window_height,
-            self.config.fullscreen, self.config.vsync
+            self.config.window_width,
+            self.config.window_height,
+            self.config.fullscreen,
+            self.config.vsync
         );
         self.game_logic.initialize()?;
         self.running = true;

@@ -7,6 +7,9 @@ use openbee_core::ecs::{System, World};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Maximum allowed size for achievement save files (10 MB).
+const MAX_SAVE_SIZE: u64 = 10 * 1024 * 1024;
+
 /// Defines a single achievement that the player can unlock.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AchievementDefinition {
@@ -203,7 +206,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Combat,
-                criteria: AchievementCriteria::UseAbility { ability: "sword".into(), count: 100 },
+                criteria: AchievementCriteria::UseAbility {
+                    ability: "sword".into(),
+                    count: 100,
+                },
                 points: 20,
             },
             AchievementDefinition {
@@ -213,7 +219,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Combat,
-                criteria: AchievementCriteria::UseAbility { ability: "pistol".into(), count: 100 },
+                criteria: AchievementCriteria::UseAbility {
+                    ability: "pistol".into(),
+                    count: 100,
+                },
                 points: 20,
             },
             AchievementDefinition {
@@ -223,7 +232,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Combat,
-                criteria: AchievementCriteria::UseAbility { ability: "dynamite".into(), count: 50 },
+                criteria: AchievementCriteria::UseAbility {
+                    ability: "dynamite".into(),
+                    count: 50,
+                },
                 points: 20,
             },
             AchievementDefinition {
@@ -233,7 +245,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Combat,
-                criteria: AchievementCriteria::UseAbility { ability: "magic_claw".into(), count: 50 },
+                criteria: AchievementCriteria::UseAbility {
+                    ability: "magic_claw".into(),
+                    count: 50,
+                },
                 points: 20,
             },
             // --- Boss achievements ---
@@ -457,7 +472,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Speedrun,
-                criteria: AchievementCriteria::CompleteUnderTime { level: 1, seconds: 120 },
+                criteria: AchievementCriteria::CompleteUnderTime {
+                    level: 1,
+                    seconds: 120,
+                },
                 points: 30,
             },
             AchievementDefinition {
@@ -467,7 +485,10 @@ impl AchievementSystem {
                 icon: None,
                 hidden: false,
                 category: AchievementCategory::Speedrun,
-                criteria: AchievementCriteria::CompleteUnderTime { level: 5, seconds: 180 },
+                criteria: AchievementCriteria::CompleteUnderTime {
+                    level: 5,
+                    seconds: 180,
+                },
                 points: 30,
             },
             // --- Challenge ---
@@ -572,10 +593,7 @@ impl AchievementSystem {
 
     /// Return whether the given achievement has been unlocked.
     pub fn is_unlocked(&self, id: &str) -> bool {
-        self.progress
-            .get(id)
-            .map(|p| p.unlocked)
-            .unwrap_or(false)
+        self.progress.get(id).map(|p| p.unlocked).unwrap_or(false)
     }
 
     /// Return the progress for a given achievement.
@@ -597,17 +615,28 @@ impl AchievementSystem {
     }
 
     /// Persist achievement progress to a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
-        let json = serde_json::to_string_pretty(&self.progress)
-            .map_err(std::io::Error::other)?;
+        let json = serde_json::to_string_pretty(&self.progress).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
     /// Load achievement progress from a JSON file.
+    // NOTE: Caller is responsible for sandbox validation
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
+        // Validate file size to prevent memory exhaustion attacks
+        let metadata = std::fs::metadata(path)?;
+        if metadata.len() > MAX_SAVE_SIZE {
+            return Err(std::io::Error::other(format!(
+                "File too large: {} bytes (max {})",
+                metadata.len(),
+                MAX_SAVE_SIZE
+            )));
+        }
+
         let json = std::fs::read_to_string(path)?;
-        let loaded: HashMap<String, AchievementProgress> = serde_json::from_str(&json)
-            .map_err(std::io::Error::other)?;
+        let loaded: HashMap<String, AchievementProgress> =
+            serde_json::from_str(&json).map_err(std::io::Error::other)?;
         // Merge loaded progress with existing definitions
         for (id, prog) in loaded {
             if self.progress.contains_key(&id) {

@@ -207,7 +207,7 @@ const MAX_TILES_PER_PLANE: usize = 10_000_000;
 
 /// Read a null-terminated string from the string table at the given offset.
 fn read_string_table_entry(data: &[u8], offset: u32) -> Result<String, WwdError> {
-    let start = offset as usize;
+    let start = usize::try_from(offset).map_err(|_| WwdError::InvalidStringOffset(offset))?;
     if start >= data.len() {
         return Err(WwdError::InvalidStringOffset(offset));
     }
@@ -286,6 +286,7 @@ impl WwdFile {
 
         // ── Plane descriptors ───────────────────────────────────
         let plane_desc_start = WWD_HEADER_SIZE;
+        // SAFETY: num_planes is u32, bounded by MAX_PLANES (64); always fits in usize.
         let mut planes = Vec::with_capacity(num_planes as usize);
 
         for i in 0..num_planes as usize {
@@ -313,9 +314,12 @@ impl WwdFile {
             let _num_image_sets = pc.read_u32::<LittleEndian>()?;
             let _num_objects = pc.read_u32::<LittleEndian>()?;
 
-            let tile_data_offset = pc.read_u32::<LittleEndian>()? as usize;
-            let _image_sets_offset = pc.read_u32::<LittleEndian>()? as usize;
-            let _objects_offset = pc.read_u32::<LittleEndian>()? as usize;
+            let tile_data_offset = usize::try_from(pc.read_u32::<LittleEndian>()?)
+                .map_err(|_| WwdError::PlaneOutOfBounds(i))?;
+            let _image_sets_offset = usize::try_from(pc.read_u32::<LittleEndian>()?)
+                .map_err(|_| WwdError::PlaneOutOfBounds(i))?;
+            let _objects_offset = usize::try_from(pc.read_u32::<LittleEndian>()?)
+                .map_err(|_| WwdError::PlaneOutOfBounds(i))?;
 
             let z_coord = pc.read_i32::<LittleEndian>()?;
 
@@ -325,6 +329,7 @@ impl WwdFile {
             let plane_name = read_string_table_entry(data, plane_name_offset)?;
 
             // ── Read tile data ──────────────────────────────────
+            // SAFETY: tiles_wide and tiles_high are u32; u32 always fits in usize (min 32-bit).
             let tile_count = (tiles_wide as usize)
                 .checked_mul(tiles_high as usize)
                 .ok_or_else(|| WwdError::TooManyTiles {
@@ -359,6 +364,7 @@ impl WwdFile {
                     // Simplified: read from the offset table
                 }
                 // Alternative approach: read string offsets
+                // SAFETY: _num_image_sets is u32; u32 always fits in usize (min 32-bit).
                 let offsets_end = _image_sets_offset + (_num_image_sets as usize) * 4;
                 if offsets_end <= data.len() {
                     let mut isc = Cursor::new(&data[_image_sets_offset..]);
@@ -460,10 +466,8 @@ impl WwdFile {
         // Resolve string offsets
         let name = read_string_table_entry(full_data, name_offset).unwrap_or_default();
         let logic = read_string_table_entry(full_data, logic_offset).unwrap_or_default();
-        let image_set =
-            read_string_table_entry(full_data, image_set_offset).unwrap_or_default();
-        let animation =
-            read_string_table_entry(full_data, animation_offset).unwrap_or_default();
+        let image_set = read_string_table_entry(full_data, image_set_offset).unwrap_or_default();
+        let animation = read_string_table_entry(full_data, animation_offset).unwrap_or_default();
 
         Ok(WwdObject {
             id,
@@ -513,7 +517,9 @@ mod tests {
         use byteorder::WriteBytesExt;
 
         // header_size
-        cursor.write_u32::<LittleEndian>(WWD_HEADER_SIZE as u32).unwrap();
+        cursor
+            .write_u32::<LittleEndian>(WWD_HEADER_SIZE as u32)
+            .unwrap();
         // unknown1
         cursor.write_u32::<LittleEndian>(0).unwrap();
         // flags
@@ -523,7 +529,9 @@ mod tests {
 
         // String offsets — all point to string_table_offset
         for _ in 0..6 {
-            cursor.write_u32::<LittleEndian>(string_table_offset).unwrap();
+            cursor
+                .write_u32::<LittleEndian>(string_table_offset)
+                .unwrap();
         }
 
         // start_x, start_y
@@ -536,7 +544,9 @@ mod tests {
         // num_planes = 0
         cursor.write_u32::<LittleEndian>(0).unwrap();
         // exe_file offset
-        cursor.write_u32::<LittleEndian>(string_table_offset).unwrap();
+        cursor
+            .write_u32::<LittleEndian>(string_table_offset)
+            .unwrap();
 
         // Rest is already zeroed
 

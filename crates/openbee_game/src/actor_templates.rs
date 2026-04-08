@@ -99,7 +99,8 @@ impl ActorTemplateRegistry {
                         "Health" => {
                             if let Some(ref mut t) = current_template {
                                 for attr in e.attributes().flatten() {
-                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let key =
+                                        String::from_utf8_lossy(attr.key.as_ref()).to_string();
                                     let value = String::from_utf8_lossy(&attr.value).to_string();
                                     if key == "value" {
                                         t.health = value.parse().ok();
@@ -110,7 +111,8 @@ impl ActorTemplateRegistry {
                         "Damage" => {
                             if let Some(ref mut t) = current_template {
                                 for attr in e.attributes().flatten() {
-                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let key =
+                                        String::from_utf8_lossy(attr.key.as_ref()).to_string();
                                     let value = String::from_utf8_lossy(&attr.value).to_string();
                                     if key == "value" {
                                         t.damage = value.parse().ok();
@@ -121,7 +123,8 @@ impl ActorTemplateRegistry {
                         "Speed" => {
                             if let Some(ref mut t) = current_template {
                                 for attr in e.attributes().flatten() {
-                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let key =
+                                        String::from_utf8_lossy(attr.key.as_ref()).to_string();
                                     let value = String::from_utf8_lossy(&attr.value).to_string();
                                     if key == "value" {
                                         t.speed = value.parse().ok();
@@ -185,12 +188,7 @@ impl ActorTemplateRegistry {
     }
 
     /// Spawn an entity from a named template at the given position.
-    pub fn spawn(
-        &self,
-        world: &mut World,
-        template_name: &str,
-        position: Vec2,
-    ) -> Result<Entity> {
+    pub fn spawn(&self, world: &mut World, template_name: &str, position: Vec2) -> Result<Entity> {
         let template = self
             .templates
             .get(template_name)
@@ -247,10 +245,7 @@ impl ActorTemplateRegistry {
             KinematicComponent {
                 velocity: Vec2::ZERO,
                 acceleration: Vec2::ZERO,
-                max_speed: Vec2::new(
-                    template.speed.unwrap_or(200.0),
-                    800.0,
-                ),
+                max_speed: Vec2::new(template.speed.unwrap_or(200.0), 800.0),
                 on_ground: false,
             },
         );

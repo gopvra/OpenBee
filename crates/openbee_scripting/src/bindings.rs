@@ -167,7 +167,10 @@ impl LuaUserData for LuaColor {
 
     fn add_methods<M: LuaUserDataMethods<Self>>(methods: &mut M) {
         methods.add_meta_method(LuaMetaMethod::ToString, |_, this, ()| {
-            Ok(format!("Color({}, {}, {}, {})", this.r, this.g, this.b, this.a))
+            Ok(format!(
+                "Color({}, {}, {}, {})",
+                this.r, this.g, this.b, this.a
+            ))
         });
     }
 }
@@ -231,7 +234,10 @@ impl LuaUserData for LuaRect {
         });
 
         methods.add_meta_method(LuaMetaMethod::ToString, |_, this, ()| {
-            Ok(format!("Rect({}, {}, {}, {})", this.x, this.y, this.w, this.h))
+            Ok(format!(
+                "Rect({}, {}, {}, {})",
+                this.x, this.y, this.w, this.h
+            ))
         });
     }
 }
@@ -266,9 +272,7 @@ pub fn register_all(lua: &Lua) -> mlua::Result<()> {
     // Constructor: Entity(id, generation)
     globals.set(
         "Entity",
-        lua.create_function(|_, (id, generation): (u32, u32)| {
-            Ok(LuaEntity { id, generation })
-        })?,
+        lua.create_function(|_, (id, generation): (u32, u32)| Ok(LuaEntity { id, generation }))?,
     )?;
 
     // Constructor: Color(r, g, b, a?)
@@ -287,9 +291,7 @@ pub fn register_all(lua: &Lua) -> mlua::Result<()> {
     // Constructor: Rect(x, y, w, h)
     globals.set(
         "Rect",
-        lua.create_function(|_, (x, y, w, h): (f32, f32, f32, f32)| {
-            Ok(LuaRect { x, y, w, h })
-        })?,
+        lua.create_function(|_, (x, y, w, h): (f32, f32, f32, f32)| Ok(LuaRect { x, y, w, h }))?,
     )?;
 
     // Utility: print override that goes through tracing

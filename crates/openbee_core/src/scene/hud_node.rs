@@ -92,9 +92,7 @@ impl HudSceneNode {
     pub fn set_health(&mut self, current: f32, max: f32) {
         for elem in &mut self.elements {
             if let HudElement::HealthBar {
-                current: c,
-                max: m,
-                ..
+                current: c, max: m, ..
             } = elem
             {
                 *c = current;
@@ -125,30 +123,20 @@ impl SceneNode for HudSceneNode {
                     max,
                 } => {
                     // Background (dark red).
-                    renderer.draw_rect_filled(
-                        Rect::new(*x, *y, *width, *height),
-                        Color::rgb(80, 0, 0),
-                    );
+                    renderer
+                        .draw_rect_filled(Rect::new(*x, *y, *width, *height), Color::rgb(80, 0, 0));
                     // Foreground (green to red gradient based on health).
                     let ratio = if *max > 0.0 {
                         (*current / *max).clamp(0.0, 1.0)
                     } else {
                         0.0
                     };
-                    let bar_color = Color::rgb(
-                        (255.0 * (1.0 - ratio)) as u8,
-                        (255.0 * ratio) as u8,
-                        0,
-                    );
-                    renderer.draw_rect_filled(
-                        Rect::new(*x, *y, *width * ratio, *height),
-                        bar_color,
-                    );
+                    let bar_color =
+                        Color::rgb((255.0 * (1.0 - ratio)) as u8, (255.0 * ratio) as u8, 0);
+                    renderer
+                        .draw_rect_filled(Rect::new(*x, *y, *width * ratio, *height), bar_color);
                     // Border.
-                    renderer.draw_rect_outline(
-                        Rect::new(*x, *y, *width, *height),
-                        Color::WHITE,
-                    );
+                    renderer.draw_rect_outline(Rect::new(*x, *y, *width, *height), Color::WHITE);
                 }
                 HudElement::Score { x, y, value } => {
                     renderer.draw_text(

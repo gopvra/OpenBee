@@ -46,15 +46,16 @@ impl System for PhysicsSystem {
 
             if !has_physics_body {
                 // Manual kinematic integration
-                let gravity_scale = world
-                    .get_component::<PhysicsComponent>(entity)
-                    .map_or(0.0, |p| {
-                        if p.body_type == PhysicsBodyType::Static {
-                            0.0
-                        } else {
-                            p.gravity_scale
-                        }
-                    });
+                let gravity_scale =
+                    world
+                        .get_component::<PhysicsComponent>(entity)
+                        .map_or(0.0, |p| {
+                            if p.body_type == PhysicsBodyType::Static {
+                                0.0
+                            } else {
+                                p.gravity_scale
+                            }
+                        });
 
                 if let Some(kinematic) = world.get_component_mut::<KinematicComponent>(entity) {
                     // Apply gravity
@@ -64,9 +65,13 @@ impl System for PhysicsSystem {
                     kinematic.velocity += kinematic.acceleration * dt;
 
                     // Clamp to max speed
-                    kinematic.velocity.x = kinematic.velocity.x
+                    kinematic.velocity.x = kinematic
+                        .velocity
+                        .x
                         .clamp(-kinematic.max_speed.x, kinematic.max_speed.x);
-                    kinematic.velocity.y = kinematic.velocity.y
+                    kinematic.velocity.y = kinematic
+                        .velocity
+                        .y
                         .clamp(-kinematic.max_speed.y, kinematic.max_speed.y);
 
                     let velocity = kinematic.velocity;
