@@ -4,8 +4,9 @@ use openbee_core::ecs::{System, World};
 use serde::{Deserialize, Serialize};
 
 /// Types of weather effects.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 pub enum WeatherType {
+    #[default]
     Clear,
     Rain,
     HeavyRain,
@@ -14,12 +15,6 @@ pub enum WeatherType {
     Sandstorm,
     Thunder,
     Volcanic,
-}
-
-impl Default for WeatherType {
-    fn default() -> Self {
-        Self::Clear
-    }
 }
 
 /// Configuration for a weather effect.
@@ -135,6 +130,12 @@ pub struct WeatherSystem {
     pub wind_noise_offset: f32,
 }
 
+impl Default for WeatherSystem {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl WeatherSystem {
     pub fn new() -> Self {
         Self {
@@ -246,7 +247,7 @@ impl WeatherSystem {
 }
 
 fn pseudo_random(seed: f32) -> f32 {
-    let x = (seed * 12.9898).sin() * 43758.5453;
+    let x = (seed * 12.9898).sin() * 43_758.547;
     x - x.floor()
 }
 

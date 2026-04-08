@@ -68,7 +68,7 @@ impl ModRegistry {
     pub fn is_enabled(&self, mod_id: &str) -> bool {
         self.entries
             .get(mod_id)
-            .map_or(false, |e| e.enabled)
+            .is_some_and(|e| e.enabled)
     }
 
     /// Get the registry entry for a mod.

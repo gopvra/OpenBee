@@ -211,8 +211,7 @@ impl InventoryComponent {
 
     /// Equip an item into a named slot. Returns the previously equipped item id, if any.
     pub fn equip(&mut self, slot: &str, item_id: &str) -> Option<String> {
-        let previous = self.equipped.insert(slot.to_string(), item_id.to_string());
-        previous
+        self.equipped.insert(slot.to_string(), item_id.to_string())
     }
 
     /// Unequip the item in the given slot. Returns the item id that was there.

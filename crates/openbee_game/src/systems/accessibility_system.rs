@@ -4,8 +4,9 @@ use openbee_core::ecs::{System, World};
 use serde::{Deserialize, Serialize};
 
 /// Colorblind simulation modes.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 pub enum ColorblindMode {
+    #[default]
     None,
     Protanopia,
     Deuteranopia,
@@ -13,25 +14,14 @@ pub enum ColorblindMode {
     Achromatopsia,
 }
 
-impl Default for ColorblindMode {
-    fn default() -> Self {
-        Self::None
-    }
-}
-
 /// Subtitle size presets.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
 pub enum SubtitleSize {
     Small,
+    #[default]
     Medium,
     Large,
     ExtraLarge,
-}
-
-impl Default for SubtitleSize {
-    fn default() -> Self {
-        Self::Medium
-    }
 }
 
 impl SubtitleSize {
@@ -113,6 +103,12 @@ impl Default for AccessibilitySettings {
 /// System that applies accessibility transforms to gameplay.
 pub struct AccessibilitySystem {
     pub settings: AccessibilitySettings,
+}
+
+impl Default for AccessibilitySystem {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AccessibilitySystem {
@@ -198,14 +194,14 @@ impl AccessibilitySystem {
 
     pub fn save(&self, path: &str) -> Result<(), std::io::Error> {
         let json = serde_json::to_string_pretty(&self.settings)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
     pub fn load(&mut self, path: &str) -> Result<(), std::io::Error> {
         let json = std::fs::read_to_string(path)?;
         self.settings = serde_json::from_str(&json)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+            .map_err(std::io::Error::other)?;
         Ok(())
     }
 }

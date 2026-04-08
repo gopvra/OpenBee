@@ -3,20 +3,15 @@
 use serde::{Deserialize, Serialize};
 
 /// How a modded asset interacts with the original.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OverrideMode {
     /// Completely replace the original asset.
+    #[default]
     Replace,
     /// Append data to the original (e.g. add entries to a list).
     Append,
     /// Deep-merge with the original (e.g. JSON patch).
     Merge,
-}
-
-impl Default for OverrideMode {
-    fn default() -> Self {
-        Self::Replace
-    }
 }
 
 /// A dependency on another mod.

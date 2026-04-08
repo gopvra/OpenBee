@@ -207,13 +207,13 @@ impl CutscenePlayer {
             CutsceneAction::Wait { seconds } => {
                 self.is_waiting = true;
                 self.wait_timer = *seconds;
-                return Some(action);
+                Some(action)
             }
             CutsceneAction::SetFlag { name, value } => {
                 self.flags.insert(name.clone(), *value);
                 self.advance();
                 // Recurse to get the next real action.
-                return self.update(0.0);
+                self.update(0.0)
             }
             CutsceneAction::ConditionalJump { flag, step } => {
                 let flag_val = self.flags.get(flag).copied().unwrap_or(false);
@@ -222,7 +222,7 @@ impl CutscenePlayer {
                 } else {
                     self.advance();
                 }
-                return self.update(0.0);
+                self.update(0.0)
             }
             CutsceneAction::ShowChoice { .. } => {
                 // Wait for player to make a choice.
@@ -231,12 +231,12 @@ impl CutscenePlayer {
                 }
                 // Choice was made, advance.
                 self.advance();
-                return self.update(0.0);
+                self.update(0.0)
             }
             _ => {
                 // For all other actions, return them and advance.
                 self.advance();
-                return Some(action);
+                Some(action)
             }
         }
     }

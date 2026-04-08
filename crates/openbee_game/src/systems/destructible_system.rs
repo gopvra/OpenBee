@@ -30,6 +30,7 @@ impl System for DestructibleSystem {
         let entities: Vec<_> = world.entities();
 
         // Track entities that need post-destruction processing.
+        #[allow(clippy::type_complexity)]
         let mut just_destroyed: Vec<(u32, u32, Option<String>, Option<String>, Vec<String>)> =
             Vec::new();
         let mut just_respawned: Vec<u32> = Vec::new();

@@ -60,14 +60,9 @@ impl System for PowerupSystem {
                     .get_component::<PowerupComponent>(entity)
                     .map(|p| p.powerup_type);
 
-                if let Some(pt) = powerup_type {
-                    match pt {
-                        PowerupType::Invincibility => {
-                            if let Some(health) = world.get_component_mut::<HealthComponent>(entity) {
-                                health.invulnerable = true;
-                            }
-                        }
-                        _ => {}
+                if let Some(PowerupType::Invincibility) = powerup_type {
+                    if let Some(health) = world.get_component_mut::<HealthComponent>(entity) {
+                        health.invulnerable = true;
                     }
                 }
             }

@@ -26,7 +26,7 @@ impl System for AiSystem {
         for entity in entities {
             let should_update = world
                 .get_component::<EnemyAiComponent>(entity)
-                .map_or(false, |ai| {
+                .is_some_and(|ai| {
                     ai.state != AiState::Dead
                 });
 

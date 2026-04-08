@@ -48,6 +48,12 @@ pub struct DialogueManager {
     pub flags: HashMap<String, bool>,
 }
 
+impl Default for DialogueManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DialogueManager {
     pub fn new() -> Self {
         Self {

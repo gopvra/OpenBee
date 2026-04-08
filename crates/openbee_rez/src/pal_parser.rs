@@ -28,9 +28,9 @@ impl Palette {
         }
 
         let mut colors = [[0u8; 3]; 256];
-        for i in 0..256 {
+        for (i, color) in colors.iter_mut().enumerate() {
             let base = i * 3;
-            colors[i] = [data[base], data[base + 1], data[base + 2]];
+            *color = [data[base], data[base + 1], data[base + 2]];
         }
 
         Ok(Palette { colors })

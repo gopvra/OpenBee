@@ -10,8 +10,9 @@ use crate::game_app::Difficulty;
 use crate::systems;
 
 /// High-level game state controlling what the player sees and how input is handled.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum GameState {
+    #[default]
     MainMenu,
     Loading,
     Playing,
@@ -22,12 +23,6 @@ pub enum GameState {
     GameOver,
     Victory,
     ScoreScreen,
-}
-
-impl Default for GameState {
-    fn default() -> Self {
-        Self::MainMenu
-    }
 }
 
 /// A saved checkpoint within a level.

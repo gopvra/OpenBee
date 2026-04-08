@@ -2,6 +2,7 @@
 
 pub mod manager;
 pub mod powerup;
+#[allow(clippy::module_inception)]
 pub mod process;
 
 pub use manager::ProcessManager;
