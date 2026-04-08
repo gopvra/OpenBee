@@ -23,6 +23,7 @@
 
 pub mod address;
 pub mod chains;
+pub mod dex;
 pub mod hd;
 pub mod keystore;
 pub mod machine_binding;
