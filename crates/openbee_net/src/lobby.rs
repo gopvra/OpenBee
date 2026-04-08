@@ -57,12 +57,19 @@ impl Lobby {
         }
     }
 
+    /// Maximum player name length in bytes.
+    const MAX_PLAYER_NAME_LEN: usize = 64;
+
     /// Add a player to the lobby. Returns `false` if the lobby is full.
     pub fn add_player(&mut self, id: ClientId, name: impl Into<String>) -> bool {
         if self.players.len() as u32 >= self.max_players {
             return false;
         }
-        let name = name.into();
+        let mut name = name.into();
+        // Sanitize player name length.
+        if name.len() > Self::MAX_PLAYER_NAME_LEN {
+            name.truncate(Self::MAX_PLAYER_NAME_LEN);
+        }
         info!("Player '{name}' (id={id}) joined lobby '{}'", self.name);
         if self.host_id.is_none() {
             self.host_id = Some(id);
@@ -102,7 +109,12 @@ impl Lobby {
         !self.players.is_empty() && self.players.values().all(|p| p.ready)
     }
 
-    /// Record a chat message.
+    /// Maximum chat messages retained in history.
+    const MAX_CHAT_HISTORY: usize = 500;
+    /// Maximum chat message length in bytes.
+    const MAX_CHAT_MESSAGE_LEN: usize = 1024;
+
+    /// Record a chat message. Truncates overly long messages and evicts oldest entries.
     pub fn add_chat(&mut self, sender_id: ClientId, message: impl Into<String>, timestamp_ms: u64) {
         let sender_name = self
             .players
@@ -110,12 +122,23 @@ impl Lobby {
             .map(|p| p.name.clone())
             .unwrap_or_else(|| "Unknown".to_string());
 
+        let mut msg: String = message.into();
+        // Truncate overly long messages to prevent memory abuse.
+        if msg.len() > Self::MAX_CHAT_MESSAGE_LEN {
+            msg.truncate(Self::MAX_CHAT_MESSAGE_LEN);
+        }
+
         self.chat_history.push(ChatEntry {
             sender_id,
             sender_name,
-            message: message.into(),
+            message: msg,
             timestamp_ms,
         });
+
+        // Evict oldest messages if history grows too large.
+        while self.chat_history.len() > Self::MAX_CHAT_HISTORY {
+            self.chat_history.remove(0);
+        }
     }
 
     /// Build a `LobbyUpdate` network message from the current state.

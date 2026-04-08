@@ -53,6 +53,11 @@ impl ModLoader {
         let entries = fs::read_dir(&self.mods_directory)
             .with_context(|| format!("Failed to read mods directory {:?}", self.mods_directory))?;
 
+        let canonical_mods_dir = self
+            .mods_directory
+            .canonicalize()
+            .unwrap_or_else(|_| self.mods_directory.clone());
+
         for entry in entries {
             let entry = entry?;
             let path = entry.path();
@@ -60,10 +65,35 @@ impl ModLoader {
                 continue;
             }
 
+            // Security: verify the resolved path is still within the mods directory
+            // (prevents symlink escapes).
+            if let Ok(canonical) = path.canonicalize() {
+                if !canonical.starts_with(&canonical_mods_dir) {
+                    warn!(
+                        "Mod directory {:?} escapes mods root {:?} — skipping",
+                        path, self.mods_directory
+                    );
+                    continue;
+                }
+            }
+
             let manifest_path = path.join("mod.json");
             if !manifest_path.exists() {
                 debug!("Skipping {:?} — no mod.json", path);
                 continue;
+            }
+
+            // Security: limit manifest file size (1MB max).
+            const MAX_MANIFEST_SIZE: u64 = 1024 * 1024;
+            if let Ok(meta) = fs::metadata(&manifest_path) {
+                if meta.len() > MAX_MANIFEST_SIZE {
+                    warn!(
+                        "Mod manifest {:?} too large ({} bytes) — skipping",
+                        manifest_path,
+                        meta.len()
+                    );
+                    continue;
+                }
             }
 
             match fs::read_to_string(&manifest_path) {

@@ -62,7 +62,8 @@ impl EntityAllocator {
             entry.is_alive = true;
             Entity::new(id, entry.generation)
         } else {
-            let id = self.entries.len() as u32;
+            let id = u32::try_from(self.entries.len())
+                .expect("Entity limit exceeded: more than 4 billion entities");
             self.entries.push(AllocatorEntry {
                 is_alive: true,
                 generation: 0,
