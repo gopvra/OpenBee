@@ -8,6 +8,7 @@ members = [
     "crates/openbee_editor",
     "crates/openbee_net",
     "crates/openbee_mod",
+    "crates/openbee_wallet",
 ]
 
 [workspace.package]
