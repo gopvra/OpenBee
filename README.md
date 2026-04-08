@@ -299,6 +299,53 @@ cargo run -- --fullscreen -d hard    # Fullscreen, hard mode
 cargo test                           # Run all 63 tests
 ```
 
+## Supported Platforms
+
+| Platform | Architecture | Binary |
+|----------|-------------|--------|
+| Linux | x86_64 | `openbee-linux-x86_64.tar.gz` |
+| Linux | ARM64 (Raspberry Pi) | `openbee-linux-aarch64.tar.gz` |
+| Windows | x86_64 | `openbee-windows-x86_64.zip` |
+| Windows | ARM64 | `openbee-windows-aarch64.zip` |
+| macOS | Intel | `openbee-macos-x86_64.tar.gz` |
+| macOS | Apple Silicon (M1/M2/M3) | `openbee-macos-aarch64.tar.gz` |
+| Web | WebAssembly | `openbee-wasm.tar.gz` |
+
+## CI/CD
+
+Automated via **GitHub Actions**:
+
+- **CI Pipeline** (`ci.yml`) — Runs on every push/PR:
+  - `cargo check` — compilation verification
+  - `cargo test` — all 63 tests
+  - `cargo clippy` — lint analysis
+  - `cargo fmt --check` — format verification
+
+- **Release Pipeline** (`release.yml`) — Triggers on tag push (`v*.*.*`):
+  - Builds all 7 platform binaries in parallel
+  - Packages with README, LICENSE, config
+  - Creates GitHub Release with changelog
+  - Uploads all artifacts
+
+### Creating a Release
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+# → GitHub Actions builds 7 binaries and creates a Release automatically
+```
+
+### Cross-platform Build (local)
+
+```bash
+make build-linux        # Linux x86_64
+make build-linux-arm    # Linux ARM64
+make build-windows      # Windows x86_64
+make build-macos-intel  # macOS Intel
+make build-macos-arm    # macOS Apple Silicon
+make build-wasm         # WebAssembly
+```
+
 ## Requirements
 
 - **Rust** 1.75+ (2021 edition)

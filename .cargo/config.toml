@@ -1,0 +1,48 @@
+# ─── OpenBee Build Configuration ───
+
+# Fast compile settings for development
+[profile.dev]
+opt-level = 0
+debug = true
+
+# Optimize deps even in dev (faster runtime with reasonable compile time)
+[profile.dev.package."*"]
+opt-level = 2
+
+# Release profile: maximum performance
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+# Distribution profile: maximum size reduction
+[profile.dist]
+inherits = "release"
+lto = "fat"
+strip = true
+
+# ─── Cross-compilation targets ───
+
+[target.x86_64-unknown-linux-gnu]
+# Default Linux target
+
+[target.aarch64-unknown-linux-gnu]
+linker = "aarch64-linux-gnu-gcc"
+
+[target.x86_64-pc-windows-msvc]
+# Default Windows target
+
+[target.aarch64-pc-windows-msvc]
+# Windows ARM64
+
+[target.x86_64-apple-darwin]
+# macOS Intel
+
+[target.aarch64-apple-darwin]
+# macOS Apple Silicon
+
+[target.wasm32-unknown-unknown]
+# WebAssembly
+runner = "wasm-server-runner"
