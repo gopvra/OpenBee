@@ -46,6 +46,14 @@ impl AssetOverrideManager {
         mod_path: &str,
         mode: OverrideMode,
     ) {
+        // Security: reject path traversal in override paths.
+        if mod_path.contains("..") || mod_path.contains('\0') {
+            tracing::warn!(
+                "Rejected asset override with suspicious path: '{mod_path}' (mod={mod_id})"
+            );
+            return;
+        }
+
         debug!(
             "Registering asset override: '{original}' -> '{mod_path}' (mod={mod_id}, mode={mode:?})"
         );

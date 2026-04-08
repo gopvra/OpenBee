@@ -102,13 +102,6 @@ mod tests {
     }
     impl Component for Position {}
 
-    #[derive(Debug, PartialEq)]
-    struct Velocity {
-        dx: f32,
-        dy: f32,
-    }
-    impl Component for Velocity {}
-
     #[test]
     fn test_insert_and_get() {
         let mut storage = ComponentStorage::new();
