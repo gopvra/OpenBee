@@ -209,12 +209,9 @@ fn run_wallet(cmd: WalletCommand) -> Result<()> {
     use openbee_wallet::safety::{WalletSafetyGate, SAFETY_WARNING};
     use std::io::{self, BufRead, Write};
 
-    match cmd {
-        WalletCommand::Help => {
-            print_wallet_help();
-            return Ok(());
-        }
-        _ => {}
+    if let WalletCommand::Help = cmd {
+        print_wallet_help();
+        return Ok(());
     }
 
     // Step 1: Show safety warning and require confirmation

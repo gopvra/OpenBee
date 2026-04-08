@@ -85,6 +85,7 @@ fn encode_uint24(value: u32) -> [u8; 32] {
 /// exactInputSingle((address,address,uint24,address,uint256,uint256,uint256,uint160))
 /// ```
 /// Selector: `0x414bf389`
+#[allow(clippy::too_many_arguments)]
 fn build_exact_input_single_calldata(
     token_in: &str,
     token_out: &str,

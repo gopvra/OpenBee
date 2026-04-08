@@ -109,8 +109,7 @@ impl EncryptedKeystore {
 
     /// Persist the keystore to `path` as JSON.
     pub fn save_to_file(&self, path: &Path) -> Result<(), std::io::Error> {
-        let json = serde_json::to_string_pretty(self)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        let json = serde_json::to_string_pretty(self).map_err(std::io::Error::other)?;
         std::fs::write(path, json)
     }
 
