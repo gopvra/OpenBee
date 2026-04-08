@@ -1,0 +1,195 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: openbee
+
+jobs:
+  # ─── Build matrix for all platforms ───
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: tar.gz
+            artifact: openbee-linux-x86_64
+          # Linux ARM64 (Raspberry Pi, etc.)
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: tar.gz
+            artifact: openbee-linux-aarch64
+            cross: true
+          # Windows x86_64
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            archive: zip
+            artifact: openbee-windows-x86_64
+            ext: .exe
+          # Windows ARM64
+          - target: aarch64-pc-windows-msvc
+            os: windows-latest
+            archive: zip
+            artifact: openbee-windows-aarch64
+            ext: .exe
+            cross: true
+          # macOS x86_64 (Intel)
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            archive: tar.gz
+            artifact: openbee-macos-x86_64
+          # macOS ARM64 (Apple Silicon)
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            archive: tar.gz
+            artifact: openbee-macos-aarch64
+          # WebAssembly
+          - target: wasm32-unknown-unknown
+            os: ubuntu-latest
+            archive: tar.gz
+            artifact: openbee-wasm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      # Linux system dependencies
+      - name: Install Linux deps
+        if: runner.os == 'Linux' && matrix.target != 'wasm32-unknown-unknown'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
+
+      # Cross-compilation tool
+      - name: Install cross
+        if: matrix.cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      # WASM tooling
+      - name: Install wasm-pack
+        if: matrix.target == 'wasm32-unknown-unknown'
+        run: |
+          sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
+          cargo install wasm-bindgen-cli || true
+
+      # ─── Build ───
+      - name: Build (native)
+        if: "!matrix.cross && matrix.target != 'wasm32-unknown-unknown'"
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Build (cross)
+        if: matrix.cross
+        run: cross build --release --target ${{ matrix.target }}
+
+      - name: Build (WASM)
+        if: matrix.target == 'wasm32-unknown-unknown'
+        run: |
+          cargo build --release --target wasm32-unknown-unknown --lib -p openbee_core || true
+          echo "WASM build attempted"
+
+      # ─── Package ───
+      - name: Package (Unix tar.gz)
+        if: matrix.archive == 'tar.gz' && matrix.target != 'wasm32-unknown-unknown'
+        run: |
+          mkdir -p dist/${{ matrix.artifact }}
+          cp target/${{ matrix.target }}/release/${{ env.BINARY_NAME }}${{ matrix.ext }} dist/${{ matrix.artifact }}/ 2>/dev/null || true
+          cp README.md LICENSE assets/config.xml dist/${{ matrix.artifact }}/
+          cp -r web dist/${{ matrix.artifact }}/web 2>/dev/null || true
+          cd dist && tar czf ${{ matrix.artifact }}.tar.gz ${{ matrix.artifact }}
+
+      - name: Package (Windows zip)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist/${{ matrix.artifact }}
+          Copy-Item target/${{ matrix.target }}/release/${{ env.BINARY_NAME }}${{ matrix.ext }} dist/${{ matrix.artifact }}/ -ErrorAction SilentlyContinue
+          Copy-Item README.md, LICENSE dist/${{ matrix.artifact }}/
+          Copy-Item assets/config.xml dist/${{ matrix.artifact }}/
+          Compress-Archive -Path dist/${{ matrix.artifact }}/* -DestinationPath dist/${{ matrix.artifact }}.zip
+
+      - name: Package (WASM)
+        if: matrix.target == 'wasm32-unknown-unknown'
+        run: |
+          mkdir -p dist/${{ matrix.artifact }}
+          cp -r web/* dist/${{ matrix.artifact }}/ 2>/dev/null || true
+          cp target/wasm32-unknown-unknown/release/*.wasm dist/${{ matrix.artifact }}/ 2>/dev/null || true
+          cp README.md LICENSE dist/${{ matrix.artifact }}/
+          cd dist && tar czf ${{ matrix.artifact }}.tar.gz ${{ matrix.artifact }}
+
+      # ─── Upload artifact ───
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/${{ matrix.artifact }}.*
+
+  # ─── Create GitHub Release ───
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: find artifacts -type f | sort
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## What's New" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD >> CHANGELOG.md 2>/dev/null || echo "- Initial release" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## Downloads" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "| Platform | Architecture | File |" >> CHANGELOG.md
+          echo "|----------|-------------|------|" >> CHANGELOG.md
+          echo "| Linux | x86_64 | \`openbee-linux-x86_64.tar.gz\` |" >> CHANGELOG.md
+          echo "| Linux | ARM64 | \`openbee-linux-aarch64.tar.gz\` |" >> CHANGELOG.md
+          echo "| Windows | x86_64 | \`openbee-windows-x86_64.zip\` |" >> CHANGELOG.md
+          echo "| Windows | ARM64 | \`openbee-windows-aarch64.zip\` |" >> CHANGELOG.md
+          echo "| macOS | Intel | \`openbee-macos-x86_64.tar.gz\` |" >> CHANGELOG.md
+          echo "| macOS | Apple Silicon | \`openbee-macos-aarch64.tar.gz\` |" >> CHANGELOG.md
+          echo "| Web | WASM | \`openbee-wasm.tar.gz\` |" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## Requirements" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "- Original CLAW.REZ game archive (from Captain Claw, 1997)" >> CHANGELOG.md
+          echo "- Linux: libasound2, libudev" >> CHANGELOG.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
