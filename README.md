@@ -30,7 +30,7 @@ crates/
 ├── openbee_core/      Shared: events, security sandbox, i18n, tween, profiler
 ├── openbee_scripting/ Lua 5.4 scripting for custom skills
 ├── openbee_net/       TCP networking for agent communication
-└── openbee_mod/       Plugin system for third-party skills
+└── openbee_plugin/    Plugin system for third-party skills
 ```
 
 ## Features
@@ -103,7 +103,7 @@ English, 中文, 日本語, 한국어, Español — 30+ strings per language
 ### 🔌 Extensibility
 
 - **Lua scripting** (`openbee_scripting`) — write custom skills in Lua 5.4
-- **Plugin system** (`openbee_mod`) — load third-party skill packages
+- **Plugin system** (`openbee_plugin`) — load third-party skill packages
 - **Network layer** (`openbee_net`) — TCP client/server for agent collaboration
 - **Tween engine** — 31 easing functions for UI animations
 

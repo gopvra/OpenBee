@@ -1,9 +1,9 @@
 [package]
-name = "openbee_mod"
+name = "openbee_plugin"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Mod support system for OpenBee - mod loading, registry, asset override"
+description = "Plugin system for OpenBee Agent — skill loading, registry, extensions"
 
 [dependencies]
 openbee_core = { workspace = true }

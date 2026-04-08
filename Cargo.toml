@@ -4,7 +4,7 @@ members = [
     "crates/openbee_core",
     "crates/openbee_scripting",
     "crates/openbee_net",
-    "crates/openbee_mod",
+    "crates/openbee_plugin",
     "crates/openbee_wallet",
     "crates/openbee_browser",
     "crates/openbee_agent",
@@ -34,7 +34,7 @@ tokio = { version = "1", features = ["full"] }
 openbee_core = { path = "crates/openbee_core" }
 openbee_scripting = { path = "crates/openbee_scripting" }
 openbee_net = { path = "crates/openbee_net" }
-openbee_mod = { path = "crates/openbee_mod" }
+openbee_plugin = { path = "crates/openbee_plugin" }
 openbee_wallet = { path = "crates/openbee_wallet" }
 openbee_browser = { path = "crates/openbee_browser" }
 openbee_agent = { path = "crates/openbee_agent" }
@@ -52,7 +52,7 @@ openbee_browser = { workspace = true }
 openbee_agent = { workspace = true }
 openbee_scripting = { workspace = true }
 openbee_net = { workspace = true }
-openbee_mod = { workspace = true }
+openbee_plugin = { workspace = true }
 serde_json = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
